@@ -1,0 +1,64 @@
+# Claude Code auto-review on every PR.
+#
+# Requires:
+#   - Claude GitHub App installed on this repo (so the workflow can
+#     comment on PRs — install at https://github.com/apps/claude).
+#   - Secret ANTHROPIC_API_KEY set on the repo.
+#
+# Fires on PR open / update / reopen / ready-for-review, skips draft PRs
+# (opt-in by marking ready). Bot-authored PRs are skipped so we don't
+# spend tokens reviewing dependabot bumps or our own release-cutting
+# workflow commits.
+name: Claude review
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, ready_for_review]
+
+jobs:
+  review:
+    if: >
+      github.event.pull_request.draft == false &&
+      github.event.pull_request.user.type != 'Bot'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
+      id-token: write
+    steps:
+      - name: Checkout PR head
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: Claude review
+        uses: anthropics/claude-code-action@v1
+        with:
+          claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+          track_progress: true
+          prompt: |
+            REPO: ${{ github.repository }}
+            PR NUMBER: ${{ github.event.pull_request.number }}
+
+            Review this pull request. Focus areas:
+
+            - **Correctness**: bugs, edge cases, race conditions, error
+              handling that swallows real problems.
+            - **Release-pipeline integrity**: this repo hosts Mythos
+              installers + the auto-updater manifest. Changes to
+              `.github/workflows/*.yml`, `docs/updater/`, or `docs/CNAME`
+              are load-bearing — flag anything that could break
+              downloads, break signature verification, or clobber the
+              custom domain / marketing site under `docs/`.
+            - **Security**: secret leakage in logs, PAT scope creep,
+              shell-injection surface in `run:` blocks, workflow
+              permissions wider than needed.
+            - **Consistency**: does the change match how similar things
+              are done elsewhere in the repo?
+
+            Prefer inline comments anchored to specific lines for
+            actionable feedback. Use a top-level summary for overall
+            assessment. If the PR looks clean, say so — no need to
+            manufacture findings.
+          claude_args: |
+            --allowedTools "mcp__github_inline_comment__create_inline_comment,Bash(gh pr comment:*),Bash(gh pr diff:*),Bash(gh pr view:*)"
