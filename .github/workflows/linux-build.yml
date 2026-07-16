@@ -1,0 +1,108 @@
+# Builds the Linux AppImage for Mythos on CI.
+#
+# Source lives in the private holsat/mythos repo. This workflow checks it
+# out via a fine-grained PAT (SOURCE_REPO_TOKEN, contents: read on
+# holsat/mythos only) at the tag/ref given in inputs, builds, and
+# attaches artifacts to a release on THIS repo (holsat/mythos-releases,
+# public) so the in-app updater can download them without auth.
+#
+# Only AppImage is produced. Deb/rpm were dropped: they cannot be
+# consumed by the in-app updater and dpkg/rpm-based users are steered
+# to AppImage (Flatpak is follow-on work).
+name: Linux build
+
+on:
+  workflow_dispatch:
+    inputs:
+      ref:
+        description: 'Ref in holsat/mythos to build (tag, branch, or sha) — e.g. v0.1.22'
+        required: true
+      tag:
+        description: 'Release tag on holsat/mythos-releases to publish assets to — e.g. v0.1.22'
+        required: true
+
+permissions:
+  contents: write   # create/append the release on this repo
+
+jobs:
+  build-linux-x64:
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Checkout source from holsat/mythos
+        uses: actions/checkout@v4
+        with:
+          repository: holsat/mythos
+          ref: ${{ inputs.ref }}
+          token: ${{ secrets.SOURCE_REPO_TOKEN }}
+
+      # Tauri 2 Linux prerequisites: WebKitGTK 4.1 + GTK3 + tray/app-indicator +
+      # svg, plus libfuse2 for the AppImage packaging tools.
+      - name: Install system dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            libwebkit2gtk-4.1-dev \
+            libgtk-3-dev \
+            libayatana-appindicator3-dev \
+            librsvg2-dev \
+            libxdo-dev \
+            libssl-dev \
+            libfuse2 \
+            build-essential curl wget file
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Set up Rust
+        uses: dtolnay/rust-toolchain@stable
+
+      # LanceDB's lance-encoding build script uses prost-build, which needs
+      # the Protocol Buffers compiler. Not preinstalled on the runner.
+      - name: Install protoc
+        uses: arduino/setup-protoc@v3
+        with:
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Cache Rust build
+        uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: src-tauri
+
+      - name: Install frontend dependencies
+        run: npm ci
+
+      # `tauri build` runs the frontend build first, then bundles AppImage.
+      # APPIMAGE_EXTRACT_AND_RUN lets the AppImage tools run without FUSE
+      # on the CI runner. TAURI_SIGNING_PRIVATE_KEY* sign the .AppImage.sig
+      # sidecar the updater verifies.
+      - name: Build (Vite + Tauri AppImage)
+        run: npm run tauri build
+        env:
+          APPIMAGE_EXTRACT_AND_RUN: '1'
+          TAURI_SIGNING_PRIVATE_KEY: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY }}
+          TAURI_SIGNING_PRIVATE_KEY_PASSWORD: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY_PASSWORD }}
+
+      # Publish to a release on THIS repo keyed by the input tag. The
+      # Windows workflow attaches its installers to the same release —
+      # softprops upserts, so whichever job runs first creates the release
+      # and the other appends. release-publish.sh appends the macOS
+      # artifacts afterward.
+      - name: Publish AppImage to release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ inputs.tag }}
+          name: ${{ inputs.tag }}
+          draft: false
+          prerelease: true      # 0.x, unsigned Windows installers
+          fail_on_unmatched_files: true
+          # Short auto-body; the source repo has the real changelog and
+          # this repo has no source commits to generate notes from.
+          body: |
+            Mythos ${{ inputs.tag }} — public installer artifacts.
+            Source + changelog: https://github.com/holsat/mythos (private).
+          files: |
+            src-tauri/target/release/bundle/appimage/*.AppImage
+            src-tauri/target/release/bundle/appimage/*.AppImage.sig

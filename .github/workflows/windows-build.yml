@@ -1,0 +1,95 @@
+# Builds the Windows installers for Mythos on CI.
+#
+# Source lives in the private holsat/mythos repo. This workflow checks it
+# out via a fine-grained PAT (SOURCE_REPO_TOKEN, contents: read on
+# holsat/mythos only) at the tag/ref given in inputs, builds, and
+# attaches artifacts to a release on THIS repo (holsat/mythos-releases,
+# public) so the in-app updater can download them without auth.
+#
+# Two installer formats, both x86_64:
+#   - NSIS   Mythos_<ver>_x64-setup.exe   (the installer most people want)
+#   - MSI    Mythos_<ver>_x64_en-US.msi
+#
+# NOT code-signed: Windows Authenticode signing is separate from the
+# Apple setup. Installers run but show a SmartScreen "unknown publisher"
+# warning until a Windows cert is wired in.
+name: Windows build
+
+on:
+  workflow_dispatch:
+    inputs:
+      ref:
+        description: 'Ref in holsat/mythos to build (tag, branch, or sha) — e.g. v0.1.22'
+        required: true
+      tag:
+        description: 'Release tag on holsat/mythos-releases to publish assets to — e.g. v0.1.22'
+        required: true
+
+permissions:
+  contents: write
+
+jobs:
+  build-windows-x64:
+    runs-on: windows-latest
+    steps:
+      - name: Checkout source from holsat/mythos
+        uses: actions/checkout@v4
+        with:
+          repository: holsat/mythos
+          ref: ${{ inputs.ref }}
+          token: ${{ secrets.SOURCE_REPO_TOKEN }}
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Set up Rust (x86_64 MSVC)
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: x86_64-pc-windows-msvc
+
+      - name: Install protoc
+        uses: arduino/setup-protoc@v3
+        with:
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Cache Rust build
+        uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: src-tauri
+
+      - name: Install frontend dependencies
+        run: npm ci
+
+      # `tauri build` runs the frontend build first (beforeBuildCommand:
+      # "npm run build") and bundles NSIS + MSI. Tauri downloads NSIS/WiX
+      # itself; WebView2 is preinstalled on the runner.
+      # TAURI_SIGNING_PRIVATE_KEY* sign each installer's .sig sidecar.
+      - name: Build (Vite + Tauri NSIS .exe + MSI .msi)
+        run: npm run tauri build
+        env:
+          TAURI_SIGNING_PRIVATE_KEY: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY }}
+          TAURI_SIGNING_PRIVATE_KEY_PASSWORD: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY_PASSWORD }}
+
+      # Publish to a release on THIS repo keyed by the input tag. Linux
+      # workflow attaches its AppImage to the same release. softprops
+      # upserts, so whichever job runs first creates the release; the
+      # other appends. release-publish.sh appends macOS afterward.
+      - name: Publish installers to release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ inputs.tag }}
+          name: ${{ inputs.tag }}
+          draft: false
+          prerelease: true
+          fail_on_unmatched_files: true
+          body: |
+            Mythos ${{ inputs.tag }} — public installer artifacts.
+            Source + changelog: https://github.com/holsat/mythos (private).
+          files: |
+            src-tauri/target/release/bundle/nsis/*-setup.exe
+            src-tauri/target/release/bundle/nsis/*-setup.exe.sig
+            src-tauri/target/release/bundle/msi/*.msi
+            src-tauri/target/release/bundle/msi/*.msi.sig

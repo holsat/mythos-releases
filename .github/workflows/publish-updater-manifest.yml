@@ -1,0 +1,171 @@
+# Publish updater manifest for the Mythos in-app auto-updater.
+#
+# Reads the release's installer .sig files (produced by tauri build with
+# bundle.createUpdaterArtifacts=true and TAURI_SIGNING_PRIVATE_KEY set in
+# the win/linux CI + local macOS build), assembles latest.json in Tauri
+# v2's updater format, and commits it to `docs/updater/latest.json` on
+# THIS repo's main branch. GitHub Pages serves docs/ at
+# https://mythos.kabalrpg.com/, so the manifest lives at
+# https://mythos.kabalrpg.com/updater/latest.json — which is the
+# endpoint baked into v0.1.22+ binaries.
+#
+# Downloaded artifacts are minisign-verified against the public key baked
+# into the binary (plugins.updater.pubkey in tauri.conf.json), so a
+# tampered artifact or a manifest pointing at a bogus file is refused
+# before install.
+#
+# **workflow_dispatch only, no `release: published` trigger:** the
+# release event fires the moment the FIRST CI job creates the release,
+# but the other CI job (Windows vs Linux) uploads its artifacts a bit
+# later, and macOS artifacts (.dmg, .app.tar.gz, .sig) are uploaded LAST
+# by the local scripts/release-publish.sh. A `release: published`
+# trigger would race those uploads and publish a partial latest.json
+# with missing platform keys. Instead, release-publish.sh invokes THIS
+# workflow via `gh workflow run` after it's done, so the manifest builds
+# against a complete asset set.
+name: Publish updater manifest
+
+on:
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: 'Release tag to publish manifest for (e.g. v0.1.22)'
+        required: true
+
+permissions:
+  contents: write   # to commit docs/updater/latest.json on main
+
+jobs:
+  publish-manifest:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout main
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - name: Resolve tag
+        id: tag
+        run: |
+          TAG='${{ inputs.tag }}'
+          if [ -z "$TAG" ]; then echo "no tag resolved" >&2; exit 1; fi
+          echo "tag=$TAG" >> "$GITHUB_OUTPUT"
+          # Version = tag with leading 'v' stripped, e.g. v0.1.22 -> 0.1.22.
+          VERSION="${TAG#v}"
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+
+      - name: Download release assets
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          TAG='${{ steps.tag.outputs.tag }}'
+          mkdir -p _assets
+          # Pull just the files we need for the manifest: the installers +
+          # their .sig sidecars, ignoring dev artifacts like SBOMs.
+          gh release download "$TAG" --repo "$GITHUB_REPOSITORY" --dir _assets \
+            --pattern '*.app.tar.gz' --pattern '*.app.tar.gz.sig' \
+            --pattern '*-setup.exe' --pattern '*-setup.exe.sig' \
+            --pattern '*.msi' --pattern '*.msi.sig' \
+            --pattern '*.AppImage' --pattern '*.AppImage.sig'
+          ls -la _assets
+
+      - name: Assemble latest.json
+        env:
+          TAG: ${{ steps.tag.outputs.tag }}
+          VERSION: ${{ steps.tag.outputs.version }}
+          REPO: ${{ github.repository }}
+        run: |
+          python3 - <<'PY'
+          import json, os, pathlib
+          repo = os.environ['REPO']
+          tag = os.environ['TAG']
+          version = os.environ['VERSION']
+          base = f"https://github.com/{repo}/releases/download/{tag}"
+
+          # (asset-suffix → manifest platform key). Tauri's updater
+          # first looks up by installer-specific key (windows-x86_64-nsis
+          # etc.), then falls through to the generic per-platform key.
+          matchers = [
+              ('.app.tar.gz', 'darwin-aarch64'),
+              ('-setup.exe',  'windows-x86_64-nsis'),
+              ('.msi',        'windows-x86_64-msi'),
+              ('.AppImage',   'linux-x86_64-appimage'),
+          ]
+
+          platforms = {}
+          missing_sigs = []
+          for path in sorted(pathlib.Path('_assets').iterdir()):
+              name = path.name
+              if name.endswith('.sig'):
+                  continue
+              for suffix, key in matchers:
+                  if name.endswith(suffix):
+                      sig_path = path.with_suffix(path.suffix + '.sig')
+                      if not sig_path.exists():
+                          missing_sigs.append(name)
+                          break
+                      platforms[key] = {
+                          'signature': sig_path.read_text().strip(),
+                          'url': f"{base}/{name}",
+                      }
+                      break
+
+          # Fail loudly on missing pieces. A partial manifest lets some
+          # platforms update and silently fails the rest — worse than
+          # not publishing at all.
+          expected_keys = {'darwin-aarch64', 'windows-x86_64-nsis', 'windows-x86_64-msi', 'linux-x86_64-appimage'}
+          missing_keys = expected_keys - platforms.keys()
+          if missing_keys:
+              raise SystemExit(f"missing platforms in release assets: {sorted(missing_keys)}. Wait for all CI + macOS uploads to complete before running this workflow.")
+          if missing_sigs:
+              raise SystemExit(f"installer(s) missing .sig sidecar: {missing_sigs}")
+
+          # Release body is set by the CI workflows to a short auto-line;
+          # good enough for the manifest's `notes` field.
+          import subprocess
+          notes = ''
+          try:
+              notes = subprocess.check_output(
+                  ['gh', 'release', 'view', tag, '--repo', repo, '--json', 'body', '--jq', '.body'],
+                  text=True,
+              ).strip()
+          except Exception:
+              pass
+
+          manifest = {
+              'version': version,
+              'notes': notes,
+              'pub_date': subprocess.check_output(['date', '-u', '+%Y-%m-%dT%H:%M:%SZ'], text=True).strip(),
+              'platforms': platforms,
+          }
+
+          pathlib.Path('docs/updater').mkdir(parents=True, exist_ok=True)
+          pathlib.Path('docs/updater/latest.json').write_text(json.dumps(manifest, indent=2))
+          print('Manifest:')
+          print(json.dumps(manifest, indent=2))
+          PY
+
+      - name: Commit and push manifest
+        run: |
+          set -euo pipefail
+          git config user.name  'github-actions[bot]'
+          git config user.email 'github-actions[bot]@users.noreply.github.com'
+          git add docs/updater/latest.json
+          if git diff --cached --quiet; then
+            echo 'No manifest change; skipping push.'
+            exit 0
+          fi
+          git commit -m "chore(updater): publish manifest for ${{ steps.tag.outputs.tag }}"
+          # Retry the push once — a concurrent marketing-site push to
+          # main will race us. Rebase and try again.
+          for i in 1 2 3; do
+            if git push origin main; then
+              exit 0
+            fi
+            echo "Push failed (attempt $i); rebasing and retrying..."
+            git pull --rebase origin main
+          done
+          echo "Push kept failing after rebase retries" >&2
+          exit 1
