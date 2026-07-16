@@ -3,11 +3,16 @@
 # Reads the release's installer .sig files (produced by tauri build with
 # bundle.createUpdaterArtifacts=true and TAURI_SIGNING_PRIVATE_KEY set in
 # the win/linux CI + local macOS build), assembles latest.json in Tauri
-# v2's updater format, and commits it to `docs/updater/latest.json` on
-# THIS repo's main branch. GitHub Pages serves docs/ at
-# https://mythos.kabalrpg.com/, so the manifest lives at
-# https://mythos.kabalrpg.com/updater/latest.json — which is the
-# endpoint baked into v0.1.22+ binaries.
+# v2's updater format, and commits it to `updater/latest.json` on the
+# gh-pages branch. GitHub Pages serves this repo's gh-pages branch root
+# at https://mythos.kabalrpg.com/, so the manifest lives at
+# https://mythos.kabalrpg.com/updater/latest.json — the endpoint baked
+# into v0.1.22+ binaries.
+#
+# The gh-pages branch also hosts the Mythos marketing site (index.html,
+# features.html, pricing.html, assets/, etc.). This workflow is
+# deliberately narrow: it stages ONLY updater/latest.json and pushes.
+# It must never touch any other file on gh-pages.
 #
 # Downloaded artifacts are minisign-verified against the public key baked
 # into the binary (plugins.updater.pubkey in tauri.conf.json), so a
@@ -33,12 +38,13 @@ on:
         required: true
 
 permissions:
-  contents: write   # to commit docs/updater/latest.json on main
+  contents: write   # to commit updater/latest.json on gh-pages
 
 jobs:
   publish-manifest:
     runs-on: ubuntu-latest
     steps:
+      # Full clone; we need gh-pages available as a checkout target below.
       - name: Checkout main
         uses: actions/checkout@v4
         with:
@@ -141,31 +147,43 @@ jobs:
               'platforms': platforms,
           }
 
-          pathlib.Path('docs/updater').mkdir(parents=True, exist_ok=True)
-          pathlib.Path('docs/updater/latest.json').write_text(json.dumps(manifest, indent=2))
+          pathlib.Path('_out').mkdir(parents=True, exist_ok=True)
+          pathlib.Path('_out/latest.json').write_text(json.dumps(manifest, indent=2))
           print('Manifest:')
           print(json.dumps(manifest, indent=2))
           PY
 
-      - name: Commit and push manifest
+      - name: Publish manifest to gh-pages
         run: |
           set -euo pipefail
           git config user.name  'github-actions[bot]'
           git config user.email 'github-actions[bot]@users.noreply.github.com'
-          git add docs/updater/latest.json
+
+          # Add gh-pages as a separate worktree so we NEVER modify or
+          # stage anything in the marketing-site tree here — the only
+          # thing we ever add is updater/latest.json.
+          git fetch origin gh-pages
+          git worktree add /tmp/gh-pages origin/gh-pages -b _publish_ephemeral
+          mkdir -p /tmp/gh-pages/updater
+          cp _out/latest.json /tmp/gh-pages/updater/latest.json
+
+          cd /tmp/gh-pages
+          # Explicit path — never `git add -A`, so a stray file in the
+          # workdir can't sneak in.
+          git add updater/latest.json
           if git diff --cached --quiet; then
             echo 'No manifest change; skipping push.'
             exit 0
           fi
           git commit -m "chore(updater): publish manifest for ${{ steps.tag.outputs.tag }}"
-          # Retry the push once — a concurrent marketing-site push to
-          # main will race us. Rebase and try again.
+          # Retry with rebase — marketing-site pushes race us on gh-pages.
           for i in 1 2 3; do
-            if git push origin main; then
+            if git push origin HEAD:gh-pages; then
               exit 0
             fi
             echo "Push failed (attempt $i); rebasing and retrying..."
-            git pull --rebase origin main
+            git fetch origin gh-pages
+            git rebase origin/gh-pages
           done
           echo "Push kept failing after rebase retries" >&2
           exit 1
