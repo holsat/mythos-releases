@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mythos — Explorations, break the story and keep the draft</title>
+<meta name="description" content="How Explorations work in Mythos: parallel branches of your manuscript for radical rewrites, side-by-side comparison, and paragraph-level selective merge — with a permanent Main draft that stays pristine.">
+<link rel="icon" type="image/svg+xml" href="assets/logo-m.svg">
+<link rel="stylesheet" href="assets/colors_and_type.css">
+<style>
+  html{scroll-behavior:smooth}
+  body{margin:0;background:#0D0D0D;overflow-x:hidden}
+  ::selection{background:rgba(212,175,55,.25)}
+  @keyframes nodePulse{0%,100%{filter:drop-shadow(0 0 6px rgba(212,175,55,.35))}50%{filter:drop-shadow(0 0 14px rgba(212,175,55,.7))}}
+  .nav-link{font-size:13px;letter-spacing:.08em;text-transform:uppercase;color:#A89878;border-bottom:none;transition:color 200ms}
+  .nav-link:hover{color:#D4AF37}
+  .nav-link.active{color:#D4AF37}
+  .buy-btn{font-family:var(--font-sans);font-size:13px;font-weight:600;letter-spacing:.06em;color:#0D0D0D;background:#D4AF37;padding:9px 20px;border-radius:6px;border-bottom:none;transition:background 200ms}
+  .buy-btn:hover{background:#E8C547}
+  .js-purchase{cursor:pointer}
+  #purchase-modal{position:fixed;inset:0;z-index:100;display:none;align-items:center;justify-content:center;background:rgba(13,13,13,.75);backdrop-filter:blur(6px);padding:24px;animation:pmFade 200ms ease-out}
+  #purchase-modal.open{display:flex}
+  #purchase-modal .box{max-width:420px;width:100%;background:#141414;border:1px solid rgba(212,175,55,.4);border-radius:12px;box-shadow:0 24px 48px rgba(0,0,0,.7),inset 0 0 24px rgba(212,175,55,.06);padding:32px 32px 26px;text-align:center;position:relative;animation:pmRise 260ms cubic-bezier(.4,0,.2,1)}
+  #purchase-modal .sigil{display:inline-block;width:34px;height:34px;background:#D4AF37;-webkit-mask:url('assets/sigils/quill.svg') center/contain no-repeat;mask:url('assets/sigils/quill.svg') center/contain no-repeat;margin-bottom:14px}
+  #purchase-modal h3{font-family:var(--font-display);font-size:16px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:#D4AF37;margin:0 0 12px}
+  #purchase-modal p{font-family:var(--font-serif);font-size:16.5px;line-height:1.55;color:rgba(232,217,168,.9);margin:0 0 22px;text-wrap:pretty}
+  #purchase-modal button{font-family:var(--font-sans);font-size:13px;font-weight:600;letter-spacing:.06em;color:#0D0D0D;background:#D4AF37;border:none;border-radius:6px;padding:10px 22px;cursor:pointer;transition:background 200ms}
+  #purchase-modal button:hover{background:#E8C547}
+  #purchase-modal .close{position:absolute;top:10px;right:12px;background:none;color:#6B6359;border:none;font-size:22px;padding:4px 10px;cursor:pointer;transition:color 200ms;border-radius:4px}
+  #purchase-modal .close:hover{color:#D4AF37;background:transparent}
+  @keyframes pmFade{from{opacity:0}to{opacity:1}}
+  @keyframes pmRise{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+</style>
+</head>
+<body>
+<div style="min-height:100vh;background:#0D0D0D;color:#E8D9A8;font-family:var(--font-sans)">
+
+<nav style="position:sticky;top:0;z-index:50;display:flex;align-items:center;justify-content:space-between;padding:16px 48px;background:rgba(13,13,13,.85);backdrop-filter:blur(12px);border-bottom:1px solid rgba(212,175,55,.12)">
+  <a href="landing.html" style="display:flex;align-items:center;gap:12px;border-bottom:none">
+    <span role="img" aria-label="Mythos" style="display:inline-block;width:28px;height:28px;background:#D4AF37;-webkit-mask:url('assets/logo-m.svg') center/contain no-repeat;mask:url('assets/logo-m.svg') center/contain no-repeat"></span>
+    <span style="font-family:var(--font-display);font-size:18px;letter-spacing:.14em;color:#D4AF37;font-weight:600">MYTHOS</span>
+  </a>
+  <div style="display:flex;align-items:center;gap:32px">
+    <a href="features.html" class="nav-link">Features</a>
+    <a href="pricing.html" class="nav-link">Pricing</a>
+    <a href="#" class="buy-btn js-purchase">Buy Mythos — $59</a>
+  </div>
+</nav>
+
+<header style="padding:90px 48px 70px;text-align:center;border-bottom:1px solid rgba(212,175,55,.12)">
+  <p style="font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:#A89878;margin:0 0 20px">Explorations</p>
+  <h1 style="font-family:var(--font-display);font-size:52px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:#D4AF37;margin:0 0 20px;line-height:1.15">Break the story.<br>Keep the draft.</h1>
+  <p style="font-family:var(--font-serif);font-size:20px;color:rgba(232,217,168,.8);max-width:620px;margin:0 auto;text-wrap:pretty">Every project has a permanent Main draft and any number of explorations — parallel versions of your story where the radical rewrite can fail safely, and the parts that work come home.</p>
+</header>
+
+<!-- HOW IT WORKS -->
+<section style="padding:90px 48px;background:#1A1A1A">
+  <div style="max-width:1060px;margin:0 auto">
+    <div style="text-align:center;margin-bottom:56px">
+      <h2 style="font-family:var(--font-display);font-size:30px;font-weight:500;letter-spacing:.06em;text-transform:uppercase;color:#D4AF37;margin:0">Four movements</h2>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:18px">
+      <div style="background:#141414;border:1px solid rgba(255,255,255,.06);border-radius:8px;padding:26px 24px">
+        <p style="font-family:var(--font-display);font-size:22px;color:#B8922E;margin:0 0 12px">I</p>
+        <h3 style="font-size:15px;font-weight:600;color:#D4AF37;margin:0 0 10px">Begin</h3>
+        <p style="font-size:14px;line-height:1.6;color:#A89878;margin:0;text-wrap:pretty">Start an exploration — a perfect copy of your story as it stands. Chapters, beats, Codex and all.</p>
+      </div>
+      <div style="background:#141414;border:1px solid rgba(255,255,255,.06);border-radius:8px;padding:26px 24px">
+        <p style="font-family:var(--font-display);font-size:22px;color:#B8922E;margin:0 0 12px">II</p>
+        <h3 style="font-size:15px;font-weight:600;color:#D4AF37;margin:0 0 10px">Write freely</h3>
+        <p style="font-size:14px;line-height:1.6;color:#A89878;margin:0;text-wrap:pretty">Rewrite, delete, invent. Everything you change stays inside the exploration. Main is untouched by definition.</p>
+      </div>
+      <div style="background:#141414;border:1px solid rgba(255,255,255,.06);border-radius:8px;padding:26px 24px">
+        <p style="font-family:var(--font-display);font-size:22px;color:#B8922E;margin:0 0 12px">III</p>
+        <h3 style="font-size:15px;font-weight:600;color:#D4AF37;margin:0 0 10px">Compare</h3>
+        <p style="font-size:14px;line-height:1.6;color:#A89878;margin:0;text-wrap:pretty">Open any chapter's history and read both versions side by side, differences highlighted.</p>
+      </div>
+      <div style="background:#141414;border:1px solid rgba(255,255,255,.06);border-radius:8px;padding:26px 24px">
+        <p style="font-family:var(--font-display);font-size:22px;color:#B8922E;margin:0 0 12px">IV</p>
+        <h3 style="font-size:15px;font-weight:600;color:#D4AF37;margin:0 0 10px">Merge or set aside</h3>
+        <p style="font-size:14px;line-height:1.6;color:#A89878;margin:0;text-wrap:pretty">Cherry-pick the passages that work, make the exploration your new Main, or archive it with its full history kept.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- BRANCH PICKER -->
+<section style="padding:90px 48px;background:#0D0D0D;border-top:1px solid rgba(255,255,255,.06)">
+  <div style="max-width:1060px;margin:0 auto;display:grid;grid-template-columns:1fr 1.15fr;gap:56px;align-items:center">
+    <div>
+      <p style="font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:#A89878;margin:0 0 18px">The Exploration Picker</p>
+      <h2 style="font-family:var(--font-display);font-size:30px;font-weight:500;letter-spacing:.06em;text-transform:uppercase;color:#D4AF37;line-height:1.2;margin:0 0 22px">Switch worlds in one click</h2>
+      <p style="font-family:var(--font-serif);font-size:18px;line-height:1.6;color:rgba(232,217,168,.85);margin:0 0 14px;text-wrap:pretty">A small pill at the top of the writing window always shows which version of the story you are in. Click it, choose an exploration, and every document — chapters, beats, Codex entries — becomes that version's. Unsaved work is tucked away safely first, so nothing half-applies.</p>
+      <p style="font-family:var(--font-serif);font-size:18px;line-height:1.6;color:rgba(232,217,168,.7);margin:0;text-wrap:pretty">An exploration begins as a perfect copy of your story as it stands, named and numbered for you. Create it and jump in — or park it for later and keep writing on Main.</p>
+    </div>
+    <div style="background:#141414;border:1px solid rgba(212,175,55,.2);border-radius:12px;box-shadow:0 24px 48px rgba(0,0,0,.6);padding:24px">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:18px">
+        <span style="font-size:11.5px;color:#A89878">The Alchemist's Tale</span>
+        <span style="color:#6B6359">›</span>
+        <span style="display:inline-flex;align-items:center;gap:7px;font-size:12px;color:#D4AF37;border:1px solid rgba(212,175,55,.5);border-radius:999px;padding:4px 14px;box-shadow:0 0 12px rgba(212,175,55,.15)">
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#D4AF37" stroke-width="2"><path d="M6 3v12a3 3 0 0 0 3 3h9"></path><circle cx="6" cy="3" r="2.5"></circle><circle cx="18" cy="18" r="2.5"></circle></svg>
+          Mentor Betrayal
+        </span>
+      </div>
+      <div style="background:rgba(20,20,20,.95);border:1px solid rgba(212,175,55,.3);border-radius:10px;box-shadow:0 8px 24px rgba(0,0,0,.6);padding:8px;max-width:300px">
+        <div style="display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:6px;background:transparent">
+          <span style="width:7px;height:7px;border-radius:50%;background:#D4AF37;border:1px solid #D4AF37"></span>
+          <span style="font-size:13px;color:#E8D9A8;flex:1">Main</span>
+          <span style="font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:#6B6359">default</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:6px;background:rgba(212,175,55,.1)">
+          <span style="width:7px;height:7px;border-radius:50%;background:transparent;border:1px solid #D4AF37"></span>
+          <span style="font-size:13px;color:#D4AF37;flex:1">Mentor Betrayal</span>
+          <span style="font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:#6B6359">active</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:6px;background:transparent">
+          <span style="width:7px;height:7px;border-radius:50%;background:transparent;border:1px solid #6B6359"></span>
+          <span style="font-size:13px;color:#A89878;flex:1">Opening B</span>
+          <span style="font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:#6B6359"></span>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:6px;background:transparent">
+          <span style="width:7px;height:7px;border-radius:50%;background:transparent;border:1px solid #6B6359"></span>
+          <span style="font-size:13px;color:#A89878;flex:1">Magic-System Rework</span>
+          <span style="font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:#6B6359">parked</span>
+        </div>
+        <div style="border-top:1px solid rgba(255,255,255,.06);margin:6px 4px 2px;padding:9px 8px 4px;display:flex;flex-direction:column;gap:8px">
+          <span style="font-size:12.5px;color:#B8922E">Start an exploration…</span>
+          <span style="font-size:12.5px;color:#A89878">Manage explorations…</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SELECTIVE MERGE -->
+<section style="padding:90px 48px;background:#1A1A1A;border-top:1px solid rgba(212,175,55,.12)">
+  <div style="max-width:1060px;margin:0 auto;display:grid;grid-template-columns:1.15fr 1fr;gap:56px;align-items:center">
+    <div style="background:#141414;border:1px solid rgba(212,175,55,.2);border-radius:12px;box-shadow:0 24px 48px rgba(0,0,0,.6);padding:24px">
+      <p style="font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:#6B6359;margin:0 0 14px">Compare — Chapter 7 · Main vs Mentor Betrayal</p>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;font-family:var(--font-serif);font-size:13.5px;line-height:1.55">
+        <div style="background:#0F0F0F;border-radius:8px;padding:14px;border:1px solid rgba(255,255,255,.06)">
+          <p style="font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:#6B6359;margin:0 0 10px;font-family:var(--font-sans)">Main</p>
+          <p style="margin:0;color:#A89878">Maren smiled and poured the tea, and for a while the world was warm.</p>
+        </div>
+        <div style="background:#0F0F0F;border-radius:8px;padding:14px;border:1px solid rgba(107,142,78,.45)">
+          <p style="font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:#6B8E4E;margin:0 0 10px;font-family:var(--font-sans)">Mentor Betrayal · taking</p>
+          <p style="margin:0;color:#E8D9A8">Maren's hand did not tremble as she poured the second cup — the one with the bitterroot.</p>
+        </div>
+      </div>
+      <div style="display:flex;gap:8px;margin-top:16px">
+        <span style="font-size:12px;font-weight:600;color:#0D0D0D;background:#D4AF37;border-radius:5px;padding:8px 16px">Save</span>
+        <span style="font-size:12px;color:#A89878;border:1px solid rgba(255,255,255,.12);border-radius:5px;padding:8px 16px">Next difference</span>
+      </div>
+      <p style="font-size:12px;color:#6B6359;margin:14px 0 0">Committed to Main with the note "merged from Mentor Betrayal."</p>
+    </div>
+    <div>
+      <p style="font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:#A89878;margin:0 0 18px">Selective Merge</p>
+      <h2 style="font-family:var(--font-display);font-size:30px;font-weight:500;letter-spacing:.06em;text-transform:uppercase;color:#D4AF37;line-height:1.2;margin:0 0 22px">Cherry-pick paragraphs, not files</h2>
+      <p style="font-family:var(--font-serif);font-size:18px;line-height:1.6;color:rgba(232,217,168,.85);margin:0 0 14px;text-wrap:pretty">Open any chapter's history — every saved version, from every exploration, timestamped. Compare side by side, accept or reject each block, and retain only the passages that earned their place.</p>
+      <p style="font-family:var(--font-serif);font-size:18px;line-height:1.6;color:rgba(232,217,168,.7);margin:0;text-wrap:pretty">When the whole experiment is the new canon, merge the entire exploration in one motion. The source stays intact — Mythos never burns a bridge for you.</p>
+    </div>
+  </div>
+</section>
+
+<!-- SAFETY RULES -->
+<section style="padding:90px 48px;background:#0D0D0D;border-top:1px solid rgba(255,255,255,.06)">
+  <div style="max-width:1060px;margin:0 auto">
+    <div style="text-align:center;margin-bottom:48px">
+      <p style="font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:#A89878;margin:0 0 16px">The Guardrails</p>
+      <h2 style="font-family:var(--font-display);font-size:30px;font-weight:500;letter-spacing:.06em;text-transform:uppercase;color:#D4AF37;margin:0">Built so nothing is ever lost</h2>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:18px">
+      <div style="background:#141414;border:1px solid rgba(255,255,255,.06);border-radius:8px;padding:26px">
+        <h3 style="font-size:15px;font-weight:600;color:#D4AF37;margin:0 0 10px">Imports go to Main</h3>
+        <p style="font-size:14px;line-height:1.6;color:#A89878;margin:0;text-wrap:pretty">An imported manuscript is your canonical draft, so Mythos always files it on Main — and every exploration inherits it automatically.</p>
+      </div>
+      <div style="background:#141414;border:1px solid rgba(255,255,255,.06);border-radius:8px;padding:26px">
+        <h3 style="font-size:15px;font-weight:600;color:#D4AF37;margin:0 0 10px">Deletions are gentle</h3>
+        <p style="font-size:14px;line-height:1.6;color:#A89878;margin:0;text-wrap:pretty">Removing a chapter hides it from the exploration you are in, nowhere else. Toggle Show Explorations to see it again — and bring it back anywhere.</p>
+      </div>
+      <div style="background:#141414;border:1px solid rgba(255,255,255,.06);border-radius:8px;padding:26px">
+        <h3 style="font-size:15px;font-weight:600;color:#D4AF37;margin:0 0 10px">Merges never destroy</h3>
+        <p style="font-size:14px;line-height:1.6;color:#A89878;margin:0;text-wrap:pretty">Making an exploration the new canon leaves the original intact, history and all. Permanent deletion exists, but it is a separate, deliberate act with a confirmation.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- WORKFLOWS -->
+<section style="padding:90px 48px;background:#1A1A1A;border-top:1px solid rgba(212,175,55,.12)">
+  <div style="max-width:860px;margin:0 auto">
+    <div style="text-align:center;margin-bottom:48px">
+      <p style="font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:#A89878;margin:0 0 16px">In Practice</p>
+      <h2 style="font-family:var(--font-display);font-size:30px;font-weight:500;letter-spacing:.06em;text-transform:uppercase;color:#D4AF37;margin:0">Three ways writers use it</h2>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:14px">
+      <div style="display:grid;grid-template-columns:220px 1fr;gap:24px;background:#141414;border:1px solid rgba(255,255,255,.06);border-radius:8px;padding:22px 26px;align-items:start">
+        <h3 style="font-family:var(--font-serif);font-style:italic;font-size:17px;color:#D4AF37;margin:0;line-height:1.4">"What if the mentor betrays the hero?"</h3>
+        <p style="font-size:14.5px;line-height:1.65;color:#A89878;margin:0;text-wrap:pretty">Start an exploration called Mentor Betrayal, rewrite the chapters that change, and read them against Main. If it works, merge the strongest passages back. If it doesn't, archive it — the experiment cost nothing.</p>
+      </div>
+      <div style="display:grid;grid-template-columns:220px 1fr;gap:24px;background:#141414;border:1px solid rgba(255,255,255,.06);border-radius:8px;padding:22px 26px;align-items:start">
+        <h3 style="font-family:var(--font-serif);font-style:italic;font-size:17px;color:#D4AF37;margin:0;line-height:1.4">A/B test two openings</h3>
+        <p style="font-size:14.5px;line-height:1.65;color:#A89878;margin:0;text-wrap:pretty">Write opening A on Main; start an exploration and write opening B. Compare side by side with fresh eyes, keep the winner, archive the other. Both stay in history forever.</p>
+      </div>
+      <div style="display:grid;grid-template-columns:220px 1fr;gap:24px;background:#141414;border:1px solid rgba(255,255,255,.06);border-radius:8px;padding:22px 26px;align-items:start">
+        <h3 style="font-family:var(--font-serif);font-style:italic;font-size:17px;color:#D4AF37;margin:0;line-height:1.4">Park a half-formed idea</h3>
+        <p style="font-size:14.5px;line-height:1.65;color:#A89878;margin:0;text-wrap:pretty">Create Magic-System Rework without switching to it. It sits dormant in the picker — a parking lot for the idea that isn't ready — while you keep drafting on Main.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section style="padding:90px 48px;background:#0D0D0D;border-top:1px solid rgba(255,255,255,.06);text-align:center">
+  <span style="display:inline-block;width:44px;height:44px;opacity:.85;margin-bottom:24px;background:#D4AF37;-webkit-mask:url('assets/sigils/compass-rose.svg') center/contain no-repeat;mask:url('assets/sigils/compass-rose.svg') center/contain no-repeat"></span>
+  <h2 style="font-family:var(--font-display);font-size:32px;font-weight:500;letter-spacing:.06em;text-transform:uppercase;color:#D4AF37;margin:0 0 18px">Write the dangerous draft.</h2>
+  <p style="font-family:var(--font-serif);font-size:19px;color:rgba(232,217,168,.8);max-width:440px;margin:0 auto 36px;text-wrap:pretty">Fourteen days free, every feature. Main stays pristine no matter what you try.</p>
+  <div style="display:flex;gap:16px;justify-content:center;flex-wrap:wrap">
+    <a href="#" class="buy-btn js-purchase" style="font-size:15px;padding:15px 34px">Buy Mythos — $59 once</a>
+    <a href="codex.html" style="font-size:15px;font-weight:500;color:#D4AF37;padding:14px 30px;border-radius:6px;border:1px solid rgba(212,175,55,.4);border-bottom:1px solid rgba(212,175,55,.4);transition:all 200ms">Next: The Codex →</a>
+  </div>
+</section>
+
+<footer style="background:#0D0D0D;border-top:1px solid rgba(212,175,55,.12);padding:48px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:24px">
+  <div style="display:flex;align-items:center;gap:12px">
+    <span style="display:inline-block;width:22px;height:22px;opacity:.8;background:#D4AF37;-webkit-mask:url('assets/logo-m.svg') center/contain no-repeat;mask:url('assets/logo-m.svg') center/contain no-repeat"></span>
+    <span style="font-size:12px;color:#6B6359">© 2026 Tanuki Vision. Your world. Your voice. Enhanced.</span>
+  </div>
+  <div style="display:flex;gap:28px">
+    <a href="landing.html" class="nav-link" style="font-size:12px">Home</a>
+    <a href="features.html" class="nav-link" style="font-size:12px">Features</a>
+    <a href="pricing.html" class="nav-link" style="font-size:12px">Pricing</a>
+  </div>
+</footer>
+
+</div>
+
+<div id="purchase-modal" role="dialog" aria-modal="true" aria-labelledby="pm-title">
+  <div class="box">
+    <button type="button" class="close" aria-label="Close">×</button>
+    <span class="sigil" aria-hidden="true"></span>
+    <h3 id="pm-title">Coming Soon</h3>
+    <p>Mythos has not been released yet. Stay tuned — it is coming soon.</p>
+    <button type="button" class="js-close">Close</button>
+  </div>
+</div>
+
+<script>
+(function(){
+  var modal = document.getElementById('purchase-modal');
+  function open(e){ if(e) e.preventDefault(); modal.classList.add('open'); document.body.style.overflow='hidden'; }
+  function close(){ modal.classList.remove('open'); document.body.style.overflow=''; }
+  document.querySelectorAll('.js-purchase').forEach(function(el){ el.addEventListener('click', open); });
+  modal.addEventListener('click', function(e){ if(e.target === modal) close(); });
+  modal.querySelectorAll('.close, .js-close').forEach(function(b){ b.addEventListener('click', close); });
+  document.addEventListener('keydown', function(e){ if(e.key === 'Escape' && modal.classList.contains('open')) close(); });
+})();
+</script>
+
+</body>
+</html>

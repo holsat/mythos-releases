@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mythos — The Codex, a living encyclopedia of your world</title>
+<meta name="description" content="How the Codex works in Mythos: structured dossiers for characters, locations, factions and lore; relationship maps drawn from the data; sigils that bind prose to the world-bible; and template-aware fields that fit your genre.">
+<link rel="icon" type="image/svg+xml" href="assets/logo-m.svg">
+<link rel="stylesheet" href="assets/colors_and_type.css">
+<style>
+  html{scroll-behavior:smooth}
+  body{margin:0;background:#0D0D0D;overflow-x:hidden}
+  ::selection{background:rgba(212,175,55,.25)}
+  @keyframes nodePulse{0%,100%{filter:drop-shadow(0 0 6px rgba(212,175,55,.35))}50%{filter:drop-shadow(0 0 14px rgba(212,175,55,.7))}}
+  .nav-link{font-size:13px;letter-spacing:.08em;text-transform:uppercase;color:#A89878;border-bottom:none;transition:color 200ms}
+  .nav-link:hover{color:#D4AF37}
+  .nav-link.active{color:#D4AF37}
+  .buy-btn{font-family:var(--font-sans);font-size:13px;font-weight:600;letter-spacing:.06em;color:#0D0D0D;background:#D4AF37;padding:9px 20px;border-radius:6px;border-bottom:none;transition:background 200ms}
+  .buy-btn:hover{background:#E8C547}
+  .js-purchase{cursor:pointer}
+  #purchase-modal{position:fixed;inset:0;z-index:100;display:none;align-items:center;justify-content:center;background:rgba(13,13,13,.75);backdrop-filter:blur(6px);padding:24px;animation:pmFade 200ms ease-out}
+  #purchase-modal.open{display:flex}
+  #purchase-modal .box{max-width:420px;width:100%;background:#141414;border:1px solid rgba(212,175,55,.4);border-radius:12px;box-shadow:0 24px 48px rgba(0,0,0,.7),inset 0 0 24px rgba(212,175,55,.06);padding:32px 32px 26px;text-align:center;position:relative;animation:pmRise 260ms cubic-bezier(.4,0,.2,1)}
+  #purchase-modal .sigil{display:inline-block;width:34px;height:34px;background:#D4AF37;-webkit-mask:url('assets/sigils/quill.svg') center/contain no-repeat;mask:url('assets/sigils/quill.svg') center/contain no-repeat;margin-bottom:14px}
+  #purchase-modal h3{font-family:var(--font-display);font-size:16px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:#D4AF37;margin:0 0 12px}
+  #purchase-modal p{font-family:var(--font-serif);font-size:16.5px;line-height:1.55;color:rgba(232,217,168,.9);margin:0 0 22px;text-wrap:pretty}
+  #purchase-modal button{font-family:var(--font-sans);font-size:13px;font-weight:600;letter-spacing:.06em;color:#0D0D0D;background:#D4AF37;border:none;border-radius:6px;padding:10px 22px;cursor:pointer;transition:background 200ms}
+  #purchase-modal button:hover{background:#E8C547}
+  #purchase-modal .close{position:absolute;top:10px;right:12px;background:none;color:#6B6359;border:none;font-size:22px;padding:4px 10px;cursor:pointer;transition:color 200ms;border-radius:4px}
+  #purchase-modal .close:hover{color:#D4AF37;background:transparent}
+  @keyframes pmFade{from{opacity:0}to{opacity:1}}
+  @keyframes pmRise{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+</style>
+</head>
+<body>
+<div style="min-height:100vh;background:#0D0D0D;color:#E8D9A8;font-family:var(--font-sans)">
+
+<nav style="position:sticky;top:0;z-index:50;display:flex;align-items:center;justify-content:space-between;padding:16px 48px;background:rgba(13,13,13,.85);backdrop-filter:blur(12px);border-bottom:1px solid rgba(212,175,55,.12)">
+  <a href="landing.html" style="display:flex;align-items:center;gap:12px;border-bottom:none">
+    <span role="img" aria-label="Mythos" style="display:inline-block;width:28px;height:28px;background:#D4AF37;-webkit-mask:url('assets/logo-m.svg') center/contain no-repeat;mask:url('assets/logo-m.svg') center/contain no-repeat"></span>
+    <span style="font-family:var(--font-display);font-size:18px;letter-spacing:.14em;color:#D4AF37;font-weight:600">MYTHOS</span>
+  </a>
+  <div style="display:flex;align-items:center;gap:32px">
+    <a href="features.html" class="nav-link">Features</a>
+    <a href="pricing.html" class="nav-link">Pricing</a>
+    <a href="#" class="buy-btn js-purchase">Buy Mythos — $59</a>
+  </div>
+</nav>
+
+<header style="padding:90px 48px 70px;text-align:center;border-bottom:1px solid rgba(212,175,55,.12)">
+  <p style="font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:#A89878;margin:0 0 20px">The Codex</p>
+  <h1 style="font-family:var(--font-display);font-size:52px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:#D4AF37;margin:0 0 20px;line-height:1.15">The living encyclopedia<br>of your world</h1>
+  <p style="font-family:var(--font-serif);font-size:20px;color:rgba(232,217,168,.8);max-width:620px;margin:0 auto;text-wrap:pretty">Characters, locations, factions, items, and lore — held as interconnected dossiers that your manuscript, your maps, and your AI companions all read from. One truth, everywhere.</p>
+</header>
+
+<!-- DOSSIER -->
+<section style="padding:90px 48px;background:#1A1A1A">
+  <div style="max-width:1060px;margin:0 auto;display:grid;grid-template-columns:1.15fr 1fr;gap:56px;align-items:start">
+    <div style="background:#141414;border:1px solid rgba(212,175,55,.25);border-radius:12px;box-shadow:0 24px 48px rgba(0,0,0,.6);overflow:hidden">
+      <div style="display:flex;gap:22px;padding:28px;border-bottom:1px solid rgba(212,175,55,.12)">
+        <div style="width:110px;height:134px;border:1px solid rgba(212,175,55,.45);border-radius:4px;background:radial-gradient(circle at 50% 32%,#2E2A22,#141414);display:flex;align-items:center;justify-content:center;flex:none;position:relative">
+          <svg width="46" height="46" viewBox="0 0 24 24" fill="none" stroke="#B8922E" stroke-width="1.1"><circle cx="12" cy="8" r="4"></circle><path d="M4 21c0-4.4 3.6-8 8-8s8 3.6 8 8"></path></svg>
+          <span style="position:absolute;bottom:6px;font-size:9px;letter-spacing:.12em;color:#6B6359">PORTRAIT</span>
+        </div>
+        <div style="flex:1">
+          <h2 style="font-family:var(--font-display);font-size:26px;font-weight:500;letter-spacing:.06em;color:#D4AF37;margin:0 0 4px">ELARA VANCE</h2>
+          <p style="font-family:var(--font-serif);font-style:italic;font-size:16px;color:#A89878;margin:0 0 14px">Alchemist of the Shattered Isles · Protagonist</p>
+          <div style="display:flex;gap:8px;flex-wrap:wrap">
+            <span style="font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:#D4AF37;border:1px solid rgba(212,175,55,.4);border-radius:4px;padding:3px 10px">Character</span>
+            <span style="font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:#A89878;border:1px solid rgba(255,255,255,.1);border-radius:4px;padding:3px 10px">Appears in 14 chapters</span>
+          </div>
+        </div>
+      </div>
+      <div style="padding:24px 28px;display:grid;grid-template-columns:1fr 1fr;gap:28px">
+        <div>
+          <p style="font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:#6B6359;margin:0 0 12px">Key Traits</p>
+          <div style="display:flex;flex-direction:column;gap:11px">
+            <div style="display:grid;grid-template-columns:84px 1fr 26px;gap:10px;align-items:center">
+              <span style="font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:#A89878">Resolve</span>
+              <div style="height:5px;background:#2A2A2A;border-radius:3px;overflow:hidden"><div style="height:100%;background:linear-gradient(90deg,#B8922E,#D4AF37);border-radius:3px;width:85%"></div></div>
+              <span style="font-family:var(--font-mono);font-size:12px;color:#B8922E">17</span>
+            </div>
+            <div style="display:grid;grid-template-columns:84px 1fr 26px;gap:10px;align-items:center">
+              <span style="font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:#A89878">Lore</span>
+              <div style="height:5px;background:#2A2A2A;border-radius:3px;overflow:hidden"><div style="height:100%;background:linear-gradient(90deg,#B8922E,#D4AF37);border-radius:3px;width:70%"></div></div>
+              <span style="font-family:var(--font-mono);font-size:12px;color:#B8922E">14</span>
+            </div>
+            <div style="display:grid;grid-template-columns:84px 1fr 26px;gap:10px;align-items:center">
+              <span style="font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:#A89878">Alchemy</span>
+              <div style="height:5px;background:#2A2A2A;border-radius:3px;overflow:hidden"><div style="height:100%;background:linear-gradient(90deg,#B8922E,#D4AF37);border-radius:3px;width:95%"></div></div>
+              <span style="font-family:var(--font-mono);font-size:12px;color:#B8922E">19</span>
+            </div>
+            <div style="display:grid;grid-template-columns:84px 1fr 26px;gap:10px;align-items:center">
+              <span style="font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:#A89878">Standing</span>
+              <div style="height:5px;background:#2A2A2A;border-radius:3px;overflow:hidden"><div style="height:100%;background:linear-gradient(90deg,#B8922E,#D4AF37);border-radius:3px;width:40%"></div></div>
+              <span style="font-family:var(--font-mono);font-size:12px;color:#B8922E">8</span>
+            </div>
+          </div>
+        </div>
+        <div>
+          <p style="font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:#6B6359;margin:0 0 12px">Biography</p>
+          <p style="font-family:var(--font-serif);font-size:14.5px;line-height:1.55;color:rgba(232,217,168,.85);margin:0">Raised in the tide-caves of Llifadur, Elara traded her inheritance for a seat at the Alchemists' Conservatory. She keeps her mother's ring on a cord — the last piece of a debt unpaid.</p>
+        </div>
+      </div>
+      <div style="padding:0 28px 26px">
+        <p style="font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:#6B6359;margin:0 0 10px">Voice Samples</p>
+        <p style="font-family:var(--font-serif);font-style:italic;font-size:14.5px;line-height:1.55;color:#B8922E;margin:0;border-left:2px solid rgba(212,175,55,.3);padding-left:14px">"Gold answers to fire. People answer to patience. I have run short of both."</p>
+      </div>
+    </div>
+    <div>
+      <h2 style="font-family:var(--font-display);font-size:30px;font-weight:500;letter-spacing:.06em;text-transform:uppercase;color:#D4AF37;line-height:1.2;margin:0 0 22px">A dossier, not a note</h2>
+      <p style="font-family:var(--font-serif);font-size:18px;line-height:1.6;color:rgba(232,217,168,.85);margin:0 0 14px;text-wrap:pretty">Every entry carries structured fields the whole application understands: traits and stat bars, biography, voice samples the Editor checks prose against, portraits from the built-in gallery, and the chapters the entity appears in.</p>
+      <p style="font-family:var(--font-serif);font-size:18px;line-height:1.6;color:rgba(232,217,168,.7);margin:0;text-wrap:pretty">Locations nest inside locations — the Highpass Inn sits in Highpass village, in the Northern Reach — and factions hold members, allies, and enemies. The Coach builds all of it on request, citing your own worldbook as its source.</p>
+    </div>
+  </div>
+</section>
+
+<!-- RELATIONSHIP MAP -->
+<section style="padding:90px 48px;background:#0D0D0D;border-top:1px solid rgba(255,255,255,.06)">
+  <div style="max-width:1060px;margin:0 auto;display:grid;grid-template-columns:1fr 1.15fr;gap:56px;align-items:center">
+    <div>
+      <p style="font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:#A89878;margin:0 0 18px">Relationship Maps</p>
+      <h2 style="font-family:var(--font-display);font-size:30px;font-weight:500;letter-spacing:.06em;text-transform:uppercase;color:#D4AF37;line-height:1.2;margin:0 0 22px">The social web, drawn in gold</h2>
+      <p style="font-family:var(--font-serif);font-size:18px;line-height:1.6;color:rgba(232,217,168,.85);margin:0 0 14px;text-wrap:pretty">Every tie — blood, rivalry, debt, secret alliance — renders as a living graph of glowing nodes and filament lines. Walk it to find the connection you forgot you wrote.</p>
+      <p style="font-family:var(--font-serif);font-size:18px;line-height:1.6;color:rgba(232,217,168,.7);margin:0;text-wrap:pretty">Relationships are polymorphic: characters to factions, factions to locations, items to their keepers. The map is read straight from the dossiers — never maintained by hand.</p>
+    </div>
+    <div style="background:#141414;border:1px solid rgba(212,175,55,.2);border-radius:12px;box-shadow:0 24px 48px rgba(0,0,0,.6);padding:24px">
+      <p style="font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:#6B6359;margin:0 0 8px">The Weaver — Elara Vance</p>
+      <svg viewBox="0 0 460 260" style="width:100%;display:block">
+        <g stroke="#B8922E" stroke-width="1" opacity=".5">
+          <line x1="230" y1="120" x2="110" y2="60"></line>
+          <line x1="230" y1="120" x2="360" y2="55"></line>
+          <line x1="230" y1="120" x2="120" y2="200"></line>
+          <line x1="230" y1="120" x2="350" y2="200"></line>
+          <line x1="110" y1="60" x2="120" y2="200" stroke-dasharray="4 4"></line>
+        </g>
+        <g font-family="Inter,sans-serif" font-size="9" letter-spacing="1" fill="#6B6359">
+          <text x="163" y="82">MENTOR</text><text x="292" y="80">RIVAL</text>
+          <text x="152" y="170">ALLY</text><text x="292" y="172">FACTION</text>
+        </g>
+        <circle cx="230" cy="120" r="26" fill="#0D0D0D" stroke="#D4AF37" stroke-width="1.6" style="animation:nodePulse 2.4s ease-in-out infinite"></circle>
+        <text x="230" y="124" text-anchor="middle" fill="#D4AF37" font-family="Cinzel,serif" font-size="11">ELARA</text>
+        <g fill="#0D0D0D" stroke="#B8922E" stroke-width="1.2">
+          <circle cx="110" cy="60" r="18"></circle><circle cx="360" cy="55" r="18"></circle>
+          <circle cx="120" cy="200" r="18"></circle><circle cx="350" cy="200" r="18"></circle>
+        </g>
+        <g text-anchor="middle" fill="#A89878" font-family="EB Garamond,serif" font-size="10.5">
+          <text x="110" y="64">Maren</text><text x="360" y="59">Kaelis</text>
+          <text x="120" y="204">Brom</text><text x="350" y="204">Khakuuna</text>
+        </g>
+      </svg>
+    </div>
+  </div>
+</section>
+
+<!-- SIGILS TIE-IN -->
+<section style="padding:90px 48px;background:#1A1A1A;border-top:1px solid rgba(212,175,55,.12)">
+  <div style="max-width:1060px;margin:0 auto">
+    <div style="text-align:center;max-width:640px;margin:0 auto 56px">
+      <p style="font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:#A89878;margin:0 0 16px">Bound to the Manuscript</p>
+      <h2 style="font-family:var(--font-display);font-size:30px;font-weight:500;letter-spacing:.06em;text-transform:uppercase;color:#D4AF37;margin:0 0 16px">The Codex writes itself into your prose</h2>
+      <p style="font-family:var(--font-serif);font-size:18px;color:rgba(232,217,168,.8);margin:0;text-wrap:pretty">Three ways the world-bible and the manuscript stay one thing.</p>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:18px">
+      <div style="background:#141414;border:1px solid rgba(255,255,255,.06);border-radius:8px;padding:26px">
+        <p style="font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:#6B6359;margin:0 0 14px">Read</p>
+        <h3 style="font-size:15px;font-weight:600;color:#D4AF37;margin:0 0 10px">Sigils pull data in</h3>
+        <p style="font-size:14px;line-height:1.6;color:#A89878;margin:0 0 14px">Type <span style="font-family:var(--font-mono);font-size:.9em;color:#D4AF37">[@</span> and autocomplete offers your whole cast. The pill resolves live from the dossier.</p>
+        <p style="font-family:var(--font-serif);font-size:15px;color:rgba(232,217,168,.85);margin:0;background:#0F0F0F;border-radius:6px;padding:12px 14px">…said <span style="font-family:var(--font-mono);font-size:.82em;color:#D4AF37;background:rgba(212,175,55,.08);border:1px solid rgba(212,175,55,.35);border-radius:4px;padding:1px 6px">[@ElaraVance]</span>, setting down the crucible.</p>
+      </div>
+      <div style="background:#141414;border:1px solid rgba(255,255,255,.06);border-radius:8px;padding:26px">
+        <p style="font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:#6B6359;margin:0 0 14px">Write</p>
+        <h3 style="font-size:15px;font-weight:600;color:#D4AF37;margin:0 0 10px">Assignments push data back</h3>
+        <p style="font-size:14px;line-height:1.6;color:#A89878;margin:0 0 14px">One-shot writes from the editor: close the bracket and the value lands in the Codex.</p>
+        <p style="font-family:var(--font-serif);font-size:15px;color:rgba(232,217,168,.85);margin:0;background:#0F0F0F;border-radius:6px;padding:12px 14px"><span style="font-family:var(--font-mono);font-size:.82em;color:#4FB3A9;background:rgba(79,179,169,.08);border:1px solid rgba(79,179,169,.4);border-radius:4px;padding:1px 6px">[@Arakasha.prowess="+1"]</span></p>
+      </div>
+      <div style="background:#141414;border:1px solid rgba(212,175,55,.3);border-radius:8px;padding:26px;box-shadow:inset 0 0 24px rgba(212,175,55,.05)">
+        <p style="font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:#6B6359;margin:0 0 14px">Reflect</p>
+        <h3 style="font-size:15px;font-weight:600;color:#D4AF37;margin:0 0 10px">Prose inference keeps it current</h3>
+        <p style="font-size:14px;line-height:1.6;color:#A89878;margin:0 0 14px">Canonize a new detail in prose and the Editor notices — and stages the Codex update for your approval.</p>
+        <div style="background:#0F0F0F;border-radius:6px;padding:12px 14px;font-size:13px;color:#A89878">
+          <span style="color:#B8922E">Proposed:</span> add "walks with a cane after Ch. 9" to Brom's dossier
+          <div style="display:flex;gap:8px;margin-top:10px">
+            <span style="font-size:11px;font-weight:600;color:#0D0D0D;background:#D4AF37;border-radius:4px;padding:5px 12px">Approve</span>
+            <span style="font-size:11px;color:#6B6359;border:1px solid rgba(255,255,255,.1);border-radius:4px;padding:5px 12px">Dismiss</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TEMPLATES -->
+<section style="padding:90px 48px;background:#0D0D0D;border-top:1px solid rgba(255,255,255,.06)">
+  <div style="max-width:820px;margin:0 auto;text-align:center">
+    <p style="font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:#A89878;margin:0 0 16px">Template-Aware Lore</p>
+    <h2 style="font-family:var(--font-display);font-size:30px;font-weight:500;letter-spacing:.06em;text-transform:uppercase;color:#D4AF37;margin:0 0 18px">It learns your system's rules</h2>
+    <p style="font-family:var(--font-serif);font-size:18px;line-height:1.65;color:rgba(232,217,168,.8);margin:0 0 20px;text-wrap:pretty">A Victorian romance needs stations and scandals; a d20 campaign needs heritage, class, and equipment. Tell the Coach — <em>"I'm using D&amp;D 5e, build a character template"</em> — or let it infer one by reading the characters you already have. The Codex reshapes its fields to match, and the Game Table rolls against them.</p>
+    <a href="features.html#gametable" style="font-size:13px;letter-spacing:.08em;text-transform:uppercase;color:#D4AF37;border-bottom:1px solid rgba(212,175,55,.4)">See the Game Table →</a>
+  </div>
+</section>
+
+<!-- CTA -->
+<section style="padding:90px 48px;background:#1A1A1A;border-top:1px solid rgba(212,175,55,.12);text-align:center">
+  <span style="display:inline-block;width:44px;height:44px;opacity:.85;margin-bottom:24px;background:#D4AF37;-webkit-mask:url('assets/sigils/quill.svg') center/contain no-repeat;mask:url('assets/sigils/quill.svg') center/contain no-repeat"></span>
+  <h2 style="font-family:var(--font-display);font-size:32px;font-weight:500;letter-spacing:.06em;text-transform:uppercase;color:#D4AF37;margin:0 0 18px">Give your world a memory.</h2>
+  <p style="font-family:var(--font-serif);font-size:19px;color:rgba(232,217,168,.8);max-width:440px;margin:0 auto 36px;text-wrap:pretty">Fourteen days free, every feature. The Codex starts remembering on page one.</p>
+  <div style="display:flex;gap:16px;justify-content:center;flex-wrap:wrap">
+    <a href="#" class="buy-btn js-purchase" style="font-size:15px;padding:15px 34px">Buy Mythos — $59 once</a>
+    <a href="explorations.html" style="font-size:15px;font-weight:500;color:#D4AF37;padding:14px 30px;border-radius:6px;border:1px solid rgba(212,175,55,.4);border-bottom:1px solid rgba(212,175,55,.4);transition:all 200ms">Next: Explorations →</a>
+  </div>
+</section>
+
+<footer style="background:#0D0D0D;border-top:1px solid rgba(212,175,55,.12);padding:48px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:24px">
+  <div style="display:flex;align-items:center;gap:12px">
+    <span style="display:inline-block;width:22px;height:22px;opacity:.8;background:#D4AF37;-webkit-mask:url('assets/logo-m.svg') center/contain no-repeat;mask:url('assets/logo-m.svg') center/contain no-repeat"></span>
+    <span style="font-size:12px;color:#6B6359">© 2026 Tanuki Vision. Your world. Your voice. Enhanced.</span>
+  </div>
+  <div style="display:flex;gap:28px">
+    <a href="landing.html" class="nav-link" style="font-size:12px">Home</a>
+    <a href="features.html" class="nav-link" style="font-size:12px">Features</a>
+    <a href="pricing.html" class="nav-link" style="font-size:12px">Pricing</a>
+  </div>
+</footer>
+
+</div>
+
+<div id="purchase-modal" role="dialog" aria-modal="true" aria-labelledby="pm-title">
+  <div class="box">
+    <button type="button" class="close" aria-label="Close">×</button>
+    <span class="sigil" aria-hidden="true"></span>
+    <h3 id="pm-title">Coming Soon</h3>
+    <p>Mythos has not been released yet. Stay tuned — it is coming soon.</p>
+    <button type="button" class="js-close">Close</button>
+  </div>
+</div>
+
+<script>
+(function(){
+  var modal = document.getElementById('purchase-modal');
+  function open(e){ if(e) e.preventDefault(); modal.classList.add('open'); document.body.style.overflow='hidden'; }
+  function close(){ modal.classList.remove('open'); document.body.style.overflow=''; }
+  document.querySelectorAll('.js-purchase').forEach(function(el){ el.addEventListener('click', open); });
+  modal.addEventListener('click', function(e){ if(e.target === modal) close(); });
+  modal.querySelectorAll('.close, .js-close').forEach(function(b){ b.addEventListener('click', close); });
+  document.addEventListener('keydown', function(e){ if(e.key === 'Escape' && modal.classList.contains('open')) close(); });
+})();
+</script>
+
+</body>
+</html>

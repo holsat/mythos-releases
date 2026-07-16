@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mythos — Pricing (In Beta)</title>
+<meta name="description" content="Mythos is currently in beta testing. Public release is expected within the next couple of months. Pricing will be posted here as launch approaches.">
+<link rel="icon" type="image/svg+xml" href="assets/logo-m.svg">
+<link rel="stylesheet" href="assets/colors_and_type.css">
+<style>
+  html{scroll-behavior:smooth}
+  body{margin:0;background:#0D0D0D;overflow-x:hidden}
+  ::selection{background:rgba(212,175,55,.25)}
+  @keyframes emberPulse{0%,100%{opacity:.55;filter:drop-shadow(0 0 12px rgba(212,175,55,.35))}50%{opacity:1;filter:drop-shadow(0 0 24px rgba(212,175,55,.75))}}
+  @keyframes fadeUp{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
+  .nav-link{font-size:13px;letter-spacing:.08em;text-transform:uppercase;color:#A89878;border-bottom:none;transition:color 200ms}
+  .nav-link:hover{color:#D4AF37}
+  .nav-link.active{color:#D4AF37}
+  .buy-btn{font-family:var(--font-sans);font-size:13px;font-weight:600;letter-spacing:.06em;color:#0D0D0D;background:#D4AF37;padding:9px 20px;border-radius:6px;border-bottom:none;transition:background 200ms;cursor:pointer}
+  .buy-btn:hover{background:#E8C547}
+  .js-purchase{cursor:pointer}
+  .beta-chip{display:inline-flex;align-items:center;gap:8px;background:rgba(212,175,55,.08);border:1px solid rgba(212,175,55,.4);border-radius:999px;padding:8px 18px;font-family:var(--font-sans);font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:#D4AF37}
+  .beta-chip .dot{width:8px;height:8px;border-radius:50%;background:#D4AF37;box-shadow:0 0 8px rgba(212,175,55,.7)}
+</style>
+</head>
+<body>
+<div style="min-height:100vh;background:#0D0D0D;color:#E8D9A8;font-family:var(--font-sans);display:flex;flex-direction:column">
+
+<nav style="position:sticky;top:0;z-index:50;display:flex;align-items:center;justify-content:space-between;padding:16px 48px;background:rgba(13,13,13,.85);backdrop-filter:blur(12px);border-bottom:1px solid rgba(212,175,55,.12)">
+  <a href="landing.html" style="display:flex;align-items:center;gap:12px;border-bottom:none">
+    <span role="img" aria-label="Mythos" style="display:inline-block;width:28px;height:28px;background:#D4AF37;-webkit-mask:url('assets/logo-m.svg') center/contain no-repeat;mask:url('assets/logo-m.svg') center/contain no-repeat"></span>
+    <span style="font-family:var(--font-display);font-size:18px;letter-spacing:.14em;color:#D4AF37;font-weight:600">MYTHOS</span>
+  </a>
+  <div style="display:flex;align-items:center;gap:32px">
+    <a href="features.html" class="nav-link">Features</a>
+    <a href="pricing.html" class="nav-link active">Pricing</a>
+  </div>
+</nav>
+
+<main style="flex:1;display:flex;align-items:center;justify-content:center;padding:80px 48px;position:relative;overflow:hidden">
+  <div style="position:absolute;left:50%;top:40%;transform:translate(-50%,-50%);width:820px;height:520px;max-width:100%;background:radial-gradient(ellipse at center,rgba(212,175,55,.10),transparent 65%);pointer-events:none"></div>
+
+  <div style="position:relative;max-width:640px;width:100%;text-align:center;animation:fadeUp 700ms cubic-bezier(.4,0,.2,1) both">
+
+    <span style="display:inline-block;width:64px;height:64px;background:#D4AF37;-webkit-mask:url('assets/sigils/muse-ember.svg') center/contain no-repeat;mask:url('assets/sigils/muse-ember.svg') center/contain no-repeat;animation:emberPulse 3s ease-in-out infinite;margin-bottom:32px"></span>
+
+    <div style="margin:0 0 28px">
+      <span class="beta-chip"><span class="dot"></span>Currently in Beta</span>
+    </div>
+
+    <h1 style="font-family:var(--font-display);font-size:52px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:#D4AF37;margin:0 0 24px;line-height:1.15;text-wrap:balance">The workshop is<br>still being built</h1>
+
+    <p style="font-family:var(--font-serif);font-size:21px;line-height:1.55;color:rgba(232,217,168,.9);margin:0 0 18px;text-wrap:pretty">Mythos is in active beta testing. We expect the public release within the next couple of months.</p>
+
+    <p style="font-family:var(--font-serif);font-size:18px;line-height:1.6;color:rgba(232,217,168,.7);margin:0 0 40px;max-width:520px;margin-left:auto;margin-right:auto;text-wrap:pretty">Pricing details, license terms, and the store will appear on this page as release day approaches. Until then, thank you for your patience — and your interest.</p>
+
+    <div style="display:flex;gap:14px;justify-content:center;flex-wrap:wrap">
+      <a href="features.html" class="buy-btn" style="font-size:15px;padding:15px 34px">See the features →</a>
+      <a href="https://github.com/holsat/mythos/releases/latest" style="font-family:var(--font-sans);font-size:15px;font-weight:500;color:#D4AF37;padding:14px 30px;border-radius:6px;border:1px solid rgba(212,175,55,.4);border-bottom:1px solid rgba(212,175,55,.4);transition:all 200ms" onmouseover="this.style.background='rgba(212,175,55,.06)';this.style.borderColor='#D4AF37'" onmouseout="this.style.background='transparent';this.style.borderColor='rgba(212,175,55,.4)'">Beta releases on GitHub</a>
+    </div>
+
+    <p style="font-size:12px;color:#6B6359;margin:36px 0 0">macOS · Windows · Linux — iPad companion in development.</p>
+  </div>
+</main>
+
+<footer style="background:#0D0D0D;border-top:1px solid rgba(212,175,55,.12);padding:36px 48px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:24px">
+  <div style="display:flex;align-items:center;gap:12px">
+    <span style="display:inline-block;width:22px;height:22px;opacity:.8;background:#D4AF37;-webkit-mask:url('assets/logo-m.svg') center/contain no-repeat;mask:url('assets/logo-m.svg') center/contain no-repeat"></span>
+    <span style="font-size:12px;color:#6B6359">© 2026 Tanuki Vision. Your world. Your voice. Enhanced.</span>
+  </div>
+  <div style="display:flex;gap:28px">
+    <a href="landing.html" class="nav-link" style="font-size:12px">Home</a>
+    <a href="features.html" class="nav-link" style="font-size:12px">Features</a>
+    <a href="https://github.com/holsat/mythos/releases/latest" class="nav-link" style="font-size:12px">Releases</a>
+  </div>
+</footer>
+
+</div>
+</body>
+</html>
