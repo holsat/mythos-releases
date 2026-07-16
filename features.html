@@ -25,6 +25,19 @@
   .theme-chip.selected{background:rgba(212,175,55,.12);border-color:rgba(212,175,55,.6);color:#D4AF37}
   .theme-chip .dot{width:12px;height:12px;border-radius:50%;border:1px solid rgba(255,255,255,.2)}
   .theme-preview,.theme-preview *{transition:background 400ms,color 400ms,border-color 400ms,box-shadow 400ms}
+  .js-purchase{cursor:pointer}
+  #purchase-modal{position:fixed;inset:0;z-index:100;display:none;align-items:center;justify-content:center;background:rgba(13,13,13,.75);backdrop-filter:blur(6px);padding:24px;animation:pmFade 200ms ease-out}
+  #purchase-modal.open{display:flex}
+  #purchase-modal .box{max-width:420px;width:100%;background:#141414;border:1px solid rgba(212,175,55,.4);border-radius:12px;box-shadow:0 24px 48px rgba(0,0,0,.7),inset 0 0 24px rgba(212,175,55,.06);padding:32px 32px 26px;text-align:center;position:relative;animation:pmRise 260ms cubic-bezier(.4,0,.2,1)}
+  #purchase-modal .sigil{display:inline-block;width:34px;height:34px;background:#D4AF37;-webkit-mask:url('assets/sigils/quill.svg') center/contain no-repeat;mask:url('assets/sigils/quill.svg') center/contain no-repeat;margin-bottom:14px}
+  #purchase-modal h3{font-family:var(--font-display);font-size:16px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:#D4AF37;margin:0 0 12px}
+  #purchase-modal p{font-family:var(--font-serif);font-size:16.5px;line-height:1.55;color:rgba(232,217,168,.9);margin:0 0 22px;text-wrap:pretty}
+  #purchase-modal button{font-family:var(--font-sans);font-size:13px;font-weight:600;letter-spacing:.06em;color:#0D0D0D;background:#D4AF37;border:none;border-radius:6px;padding:10px 22px;cursor:pointer;transition:background 200ms}
+  #purchase-modal button:hover{background:#E8C547}
+  #purchase-modal .close{position:absolute;top:10px;right:12px;background:none;color:#6B6359;border:none;font-size:22px;padding:4px 10px;cursor:pointer;transition:color 200ms;border-radius:4px}
+  #purchase-modal .close:hover{color:#D4AF37;background:transparent}
+  @keyframes pmFade{from{opacity:0}to{opacity:1}}
+  @keyframes pmRise{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
 </style>
 </head>
 <body>
@@ -38,8 +51,8 @@
   </a>
   <div style="display:flex;align-items:center;gap:32px">
     <a href="features.html" class="nav-link active">Features</a>
-    <a href="pricing.html" class="nav-link">Pricing</a>
-    <a href="pricing.html" class="buy-btn">Buy Mythos — $59</a>
+    <a href="#" class="nav-link js-purchase">Pricing</a>
+    <a href="#" class="buy-btn js-purchase">Buy Mythos — $59</a>
   </div>
 </nav>
 
@@ -62,7 +75,7 @@
     <div style="background:#141414;border:1px solid rgba(212,175,55,.2);border-radius:12px;box-shadow:0 24px 48px rgba(0,0,0,.6);padding:32px 36px;font-family:var(--font-serif);font-size:17.5px;line-height:1.8;color:rgba(232,217,168,.9)">
       <p style="margin:0 0 16px"><span style="font-family:var(--font-mono);font-size:.82em;color:#D4AF37;background:rgba(212,175,55,.08);border:1px solid rgba(212,175,55,.35);border-radius:4px;padding:1px 6px">[@ElaraVance]</span> pressed the vial into <span style="font-family:var(--font-mono);font-size:.82em;color:#D4AF37;background:rgba(212,175,55,.08);border:1px solid rgba(212,175,55,.35);border-radius:4px;padding:1px 6px">[@Brom]</span>'s scarred palm.</p>
       <p style="margin:0 0 16px">"The toll is <span style="font-family:var(--font-mono);font-size:.82em;color:#4FB3A9;background:rgba(79,179,169,.08);border:1px dashed rgba(79,179,169,.45);border-radius:4px;padding:1px 6px">[=Tolls.Highpass]</span> now," he said. "The <span style="font-family:var(--font-mono);font-size:.82em;color:#4FB3A9;background:rgba(79,179,169,.08);border:1px solid rgba(79,179,169,.45);border-radius:4px;padding:1px 6px">[=Sultanate]</span> raised it after the thaw."</p>
-      <p style="margin:0">She thought of <span style="font-family:var(--font-mono);font-size:.82em;color:#C96A5E;background:rgba(168,68,58,.08);border:1px solid rgba(168,68,58,.45);border-radius:4px;padding:1px 6px;font-style:italic">[@Kaelen]</span><span style="font-size:12px;color:#6B6359;font-family:var(--font-sans)"> ← unresolved — a typo, or a character you haven't met yet</span></p>
+      <p style="margin:0">She thought of <span style="font-family:var(--font-mono);font-size:.82em;color:#C96A5E;background:rgba(168,68,58,.08);border:1px solid rgba(168,68,58,.45);border-radius:4px;padding:1px 6px;font-style:italic">[?Kaelen]</span><span style="font-size:12px;color:#6B6359;font-family:var(--font-sans)"> ← unresolved — a typo, or a character you haven't met yet</span></p>
     </div>
   </div>
 </section>
@@ -304,7 +317,7 @@
       <h2 style="font-family:var(--font-display);font-size:32px;font-weight:500;letter-spacing:.06em;text-transform:uppercase;color:#D4AF37;line-height:1.2;margin:0 0 22px">The manuscript leaves the desk</h2>
       <p style="font-family:var(--font-serif);font-size:18px;line-height:1.6;color:rgba(232,217,168,.85);margin:0 0 14px;text-wrap:pretty">A full read-and-write companion for iPad, working from the same .mythos vault as your desktop. Draft a scene in the garden, revise a chapter in bed, consult the Codex from the reading chair — everything is waiting at your desk when you return.</p>
       <p style="font-family:var(--font-serif);font-size:18px;line-height:1.6;color:rgba(232,217,168,.7);margin:0 0 22px;text-wrap:pretty">The companion is part of Era 4 of the roadmap and will be included with every license — lifetime and subscription alike, at no further charge.</p>
-      <a href="pricing.html" style="font-size:13px;letter-spacing:.08em;text-transform:uppercase;color:#D4AF37;border-bottom:1px solid rgba(212,175,55,.4)">Be writing when it arrives →</a>
+      <a href="#" class="js-purchase" style="font-size:13px;letter-spacing:.08em;text-transform:uppercase;color:#D4AF37;border-bottom:1px solid rgba(212,175,55,.4)">Be writing when it arrives →</a>
     </div>
     <div style="display:flex;justify-content:center">
       <div style="width:340px;background:#0A0A0A;border:1px solid rgba(255,255,255,.14);border-radius:22px;padding:14px;box-shadow:0 24px 48px rgba(0,0,0,.7)">
@@ -331,10 +344,10 @@
 <section style="padding:100px 48px;background:#0D0D0D;border-top:1px solid rgba(212,175,55,.12);text-align:center">
   <span style="display:inline-block;width:44px;height:44px;opacity:.85;margin-bottom:24px;background:#D4AF37;-webkit-mask:url('assets/sigils/compass-rose.svg') center/contain no-repeat;mask:url('assets/sigils/compass-rose.svg') center/contain no-repeat"></span>
   <h2 style="font-family:var(--font-display);font-size:36px;font-weight:500;letter-spacing:.06em;text-transform:uppercase;color:#D4AF37;margin:0 0 18px">The desk is ready.</h2>
-  <p style="font-family:var(--font-serif);font-size:19px;color:rgba(232,217,168,.8);max-width:480px;margin:0 auto 36px;text-wrap:pretty">Every feature. No account. Your world never leaves your machine.</p>
+  <p style="font-family:var(--font-serif);font-size:19px;color:rgba(232,217,168,.8);max-width:480px;margin:0 auto 36px;text-wrap:pretty">Fourteen days, every feature, no account. Your world never leaves your machine.</p>
   <div style="display:flex;gap:16px;justify-content:center;flex-wrap:wrap">
-    <a href="pricing.html" class="buy-btn" style="font-size:15px;padding:15px 34px">Buy Mythos — $59 once</a>
-    <a href="pricing.html" style="font-size:15px;font-weight:500;color:#D4AF37;padding:14px 30px;border-radius:6px;border:1px solid rgba(212,175,55,.4);border-bottom:1px solid rgba(212,175,55,.4);transition:all 200ms">See pricing</a>
+    <a href="#" class="buy-btn js-purchase" style="font-size:15px;padding:15px 34px">Buy Mythos — $59 once</a>
+    <a href="#" class="js-purchase" style="font-size:15px;font-weight:500;color:#D4AF37;padding:14px 30px;border-radius:6px;border:1px solid rgba(212,175,55,.4);border-bottom:1px solid rgba(212,175,55,.4);transition:all 200ms">See pricing</a>
   </div>
 </section>
 
@@ -345,12 +358,34 @@
   </div>
   <div style="display:flex;gap:28px">
     <a href="landing.html" class="nav-link" style="font-size:12px">Home</a>
-    <a href="pricing.html" class="nav-link" style="font-size:12px">Pricing</a>
+    <a href="#" class="nav-link js-purchase" style="font-size:12px">Pricing</a>
     <a href="https://github.com/holsat/mythos/releases/latest" class="nav-link" style="font-size:12px">Releases</a>
   </div>
 </footer>
 
 </div>
+
+<div id="purchase-modal" role="dialog" aria-modal="true" aria-labelledby="pm-title">
+  <div class="box">
+    <button type="button" class="close" aria-label="Close">×</button>
+    <span class="sigil" aria-hidden="true"></span>
+    <h3 id="pm-title">Coming Soon</h3>
+    <p>Mythos has not been released yet. Stay tuned — it is coming soon.</p>
+    <button type="button" class="js-close">Close</button>
+  </div>
+</div>
+
+<script>
+(function(){
+  var modal = document.getElementById('purchase-modal');
+  function open(e){ if(e) e.preventDefault(); modal.classList.add('open'); document.body.style.overflow='hidden'; }
+  function close(){ modal.classList.remove('open'); document.body.style.overflow=''; }
+  document.querySelectorAll('.js-purchase').forEach(function(el){ el.addEventListener('click', open); });
+  modal.addEventListener('click', function(e){ if(e.target === modal) close(); });
+  modal.querySelectorAll('.close, .js-close').forEach(function(b){ b.addEventListener('click', close); });
+  document.addEventListener('keydown', function(e){ if(e.key === 'Escape' && modal.classList.contains('open')) close(); });
+})();
+</script>
 
 <script>
 (function(){
