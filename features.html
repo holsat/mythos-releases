@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mythos — Every instrument of the craft</title>
+<meta name="description" content="A tour of the Mythos writing studio: the living manuscript, Muse/Coach/Editor, Codex, Explorations, Game Table, Atlas, Chronicle, Lumina, eleven themes, professional export, and the iPad companion.">
+<link rel="icon" type="image/svg+xml" href="assets/logo-m.svg">
+<link rel="stylesheet" href="assets/colors_and_type.css">
+<style>
+  html{scroll-behavior:smooth}
+  body{margin:0;background:#0D0D0D;overflow-x:hidden}
+  ::selection{background:rgba(212,175,55,.25)}
+  @keyframes cursorBlink{0%,49%{opacity:1}50%,100%{opacity:0}}
+  @keyframes dicePulse{0%,100%{filter:drop-shadow(0 0 6px rgba(212,175,55,.3))}50%{filter:drop-shadow(0 0 14px rgba(212,175,55,.7))}}
+  .nav-link{font-size:13px;letter-spacing:.08em;text-transform:uppercase;color:#A89878;border-bottom:none;transition:color 200ms}
+  .nav-link:hover{color:#D4AF37}
+  .nav-link.active{color:#D4AF37}
+  .buy-btn{font-family:var(--font-sans);font-size:13px;font-weight:600;letter-spacing:.06em;color:#0D0D0D;background:#D4AF37;padding:9px 20px;border-radius:6px;border-bottom:none;transition:background 200ms}
+  .buy-btn:hover{background:#E8C547}
+  .feature-tab{padding:12px 22px;font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:#6B6359}
+  .feature-tab.active{color:#D4AF37;border-bottom:2px solid #D4AF37}
+  .theme-chip{display:flex;align-items:center;gap:8px;background:#141414;border:1px solid rgba(255,255,255,.1);border-radius:999px;padding:8px 16px;cursor:pointer;font-family:var(--font-sans);font-size:12.5px;letter-spacing:.04em;color:#A89878;transition:all 200ms}
+  .theme-chip:hover{border-color:rgba(212,175,55,.4);color:#D4AF37}
+  .theme-chip.selected{background:rgba(212,175,55,.12);border-color:rgba(212,175,55,.6);color:#D4AF37}
+  .theme-chip .dot{width:12px;height:12px;border-radius:50%;border:1px solid rgba(255,255,255,.2)}
+  .theme-preview,.theme-preview *{transition:background 400ms,color 400ms,border-color 400ms,box-shadow 400ms}
+</style>
+</head>
+<body>
+<div style="min-height:100vh;background:#0D0D0D;color:#E8D9A8;font-family:var(--font-sans)">
+
+<!-- NAV -->
+<nav style="position:sticky;top:0;z-index:50;display:flex;align-items:center;justify-content:space-between;padding:16px 48px;background:rgba(13,13,13,.85);backdrop-filter:blur(12px);border-bottom:1px solid rgba(212,175,55,.12)">
+  <a href="landing.html" style="display:flex;align-items:center;gap:12px;border-bottom:none">
+    <span role="img" aria-label="Mythos" style="display:inline-block;width:28px;height:28px;background:#D4AF37;-webkit-mask:url('assets/logo-m.svg') center/contain no-repeat;mask:url('assets/logo-m.svg') center/contain no-repeat"></span>
+    <span style="font-family:var(--font-display);font-size:18px;letter-spacing:.14em;color:#D4AF37;font-weight:600">MYTHOS</span>
+  </a>
+  <div style="display:flex;align-items:center;gap:32px">
+    <a href="features.html" class="nav-link active">Features</a>
+    <a href="pricing.html" class="nav-link">Pricing</a>
+    <a href="pricing.html" class="buy-btn">Buy Mythos — $59</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<header style="padding:90px 48px 70px;text-align:center;border-bottom:1px solid rgba(212,175,55,.12)">
+  <p style="font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:#A89878;margin:0 0 20px">The Complete Study</p>
+  <h1 style="font-family:var(--font-display);font-size:52px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:#D4AF37;margin:0 0 20px;line-height:1.15">Every instrument of the craft</h1>
+  <p style="font-family:var(--font-serif);font-size:20px;color:rgba(232,217,168,.8);max-width:600px;margin:0 auto;text-wrap:pretty">From the first sigil typed into a blank page to the finished EPUB — a tour of the whole workshop.</p>
+</header>
+
+<!-- LIVING MANUSCRIPT -->
+<section id="editor" style="padding:90px 48px;background:#1A1A1A">
+  <div style="max-width:1060px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:center">
+    <div>
+      <p style="font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:#A89878;margin:0 0 18px">The Living Manuscript</p>
+      <h2 style="font-family:var(--font-display);font-size:32px;font-weight:500;letter-spacing:.06em;text-transform:uppercase;color:#D4AF37;line-height:1.2;margin:0 0 22px">Prose bound to lore by sigils</h2>
+      <p style="font-family:var(--font-serif);font-size:18px;line-height:1.6;color:rgba(232,217,168,.85);margin:0 0 14px;text-wrap:pretty">Bracketed sigils embed living references directly in your prose. A gold pill pulls a character from the Codex; a teal pill reads a project variable or a rules-table constant. Rename the character once — every mention updates.</p>
+      <p style="font-family:var(--font-serif);font-size:18px;line-height:1.6;color:rgba(232,217,168,.7);margin:0;text-wrap:pretty">Footnotes, cross-references, headings H1–H5, AI line-proofing with gold squiggles, and paragraph-level keyboard navigation round out a word processor built for fiction — not memos.</p>
+    </div>
+    <div style="background:#141414;border:1px solid rgba(212,175,55,.2);border-radius:12px;box-shadow:0 24px 48px rgba(0,0,0,.6);padding:32px 36px;font-family:var(--font-serif);font-size:17.5px;line-height:1.8;color:rgba(232,217,168,.9)">
+      <p style="margin:0 0 16px"><span style="font-family:var(--font-mono);font-size:.82em;color:#D4AF37;background:rgba(212,175,55,.08);border:1px solid rgba(212,175,55,.35);border-radius:4px;padding:1px 6px">[@ElaraVance]</span> pressed the vial into <span style="font-family:var(--font-mono);font-size:.82em;color:#D4AF37;background:rgba(212,175,55,.08);border:1px solid rgba(212,175,55,.35);border-radius:4px;padding:1px 6px">[@Brom]</span>'s scarred palm.</p>
+      <p style="margin:0 0 16px">"The toll is <span style="font-family:var(--font-mono);font-size:.82em;color:#4FB3A9;background:rgba(79,179,169,.08);border:1px dashed rgba(79,179,169,.45);border-radius:4px;padding:1px 6px">[=Tolls.Highpass]</span> now," he said. "The <span style="font-family:var(--font-mono);font-size:.82em;color:#4FB3A9;background:rgba(79,179,169,.08);border:1px solid rgba(79,179,169,.45);border-radius:4px;padding:1px 6px">[=Sultanate]</span> raised it after the thaw."</p>
+      <p style="margin:0">She thought of <span style="font-family:var(--font-mono);font-size:.82em;color:#C96A5E;background:rgba(168,68,58,.08);border:1px solid rgba(168,68,58,.45);border-radius:4px;padding:1px 6px;font-style:italic">[@Kaelen]</span><span style="font-size:12px;color:#6B6359;font-family:var(--font-sans)"> ← unresolved — a typo, or a character you haven't met yet</span></p>
+    </div>
+  </div>
+</section>
+
+<!-- COMPANIONS -->
+<section id="companions" style="padding:90px 48px;background:#0D0D0D;border-top:1px solid rgba(255,255,255,.06)">
+  <div style="max-width:1060px;margin:0 auto">
+    <div style="text-align:center;margin-bottom:56px">
+      <p style="font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:#A89878;margin:0 0 16px">The Three Companions</p>
+      <h2 style="font-family:var(--font-display);font-size:32px;font-weight:500;letter-spacing:.06em;text-transform:uppercase;color:#D4AF37;margin:0">Ask. Plan. Guard.</h2>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:56px;align-items:center;margin-bottom:72px">
+      <div style="background:#141414;border:1px solid rgba(212,175,55,.2);border-radius:12px;box-shadow:0 24px 48px rgba(0,0,0,.6);overflow:hidden">
+        <div style="display:flex;border-bottom:1px solid rgba(255,255,255,.06);background:#0F0F0F">
+          <span class="feature-tab active">Muse</span>
+          <span class="feature-tab">Coach</span>
+          <span class="feature-tab">Editor</span>
+        </div>
+        <div style="padding:24px;display:flex;flex-direction:column;gap:16px">
+          <div style="align-self:flex-end;max-width:85%;background:#202020;border-radius:10px 10px 2px 10px;padding:12px 16px;font-size:14px;color:#E8D9A8">What was the name of the tavern the protagonist visited in the prologue?</div>
+          <div style="align-self:flex-start;max-width:88%;background:rgba(212,175,55,.06);border:1px solid rgba(212,175,55,.2);border-radius:10px 10px 10px 2px;padding:12px 16px">
+            <p style="font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:#B8922E;margin:0 0 8px">Mythos AI Assistant</p>
+            <p style="font-size:14px;line-height:1.6;color:#E8D9A8;margin:0">The <em>Gilded Ram</em>, in the harbor quarter of Llifadur — Elara paid with her mother's ring in the prologue's closing scene. It reappears in your Chapter 9 notes as "the tavern with the debt."</p>
+          </div>
+          <div style="display:flex;align-items:center;gap:10px;background:#0F0F0F;border:1px solid rgba(255,255,255,.08);border-radius:8px;padding:11px 16px">
+            <span style="font-size:14px;color:#6B6359;font-style:italic;flex:1">Ask Mythos...</span>
+            <span style="display:inline-block;width:2px;height:14px;background:#D4AF37;animation:cursorBlink 1s step-end infinite"></span>
+          </div>
+        </div>
+      </div>
+      <div>
+        <h3 style="font-family:var(--font-display);font-size:22px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;color:#D4AF37;margin:0 0 14px">The Muse — recall, not invention</h3>
+        <p style="font-family:var(--font-serif);font-size:18px;line-height:1.6;color:rgba(232,217,168,.85);margin:0 0 14px;text-wrap:pretty">Every chapter, Codex entry, and imported rulebook is indexed into a local knowledge base. Ask the Muse anything about your own canon — from inside the panel, or inline with <span style="font-family:var(--font-mono);font-size:.85em;color:#B8922E">@chat</span> and <span style="font-family:var(--font-mono);font-size:.85em;color:#B8922E">@summarize</span> without taking your hands off the keys.</p>
+        <p style="font-family:var(--font-serif);font-size:18px;line-height:1.6;color:rgba(232,217,168,.7);margin:0;text-wrap:pretty">Highlight a passage and the bubble menu offers <span style="font-family:var(--font-mono);font-size:.85em;color:#B8922E">@expand</span> and <span style="font-family:var(--font-mono);font-size:.85em;color:#B8922E">@rewrite</span> — in your project's voice, never a generic one.</p>
+      </div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:56px;align-items:center">
+      <div>
+        <h3 style="font-family:var(--font-display);font-size:22px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;color:#D4AF37;margin:0 0 14px">Coach &amp; Editor — nothing applies without you</h3>
+        <p style="font-family:var(--font-serif);font-size:18px;line-height:1.6;color:rgba(232,217,168,.85);margin:0 0 14px;text-wrap:pretty">The Coach stages structural work — outlines, beat sheets, Codex entries, project-wide renames — as a plan you inspect card by card. Approve and it applies in one transaction; cancel and nothing moved.</p>
+        <p style="font-family:var(--font-serif);font-size:18px;line-height:1.6;color:rgba(232,217,168,.7);margin:0;text-wrap:pretty">The Editor reviews your prose and surfaces findings: beats delivered, voice drift, dangling promises, continuity contradictions — with both conflicting passages shown side by side.</p>
+      </div>
+      <div style="background:#141414;border:1px solid rgba(212,175,55,.2);border-radius:12px;box-shadow:0 24px 48px rgba(0,0,0,.6);padding:24px">
+        <p style="font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:#6B6359;margin:0 0 14px">Editor — Finding · Continuity</p>
+        <div style="border:1px solid rgba(168,68,58,.4);border-radius:8px;padding:16px;margin-bottom:12px">
+          <p style="font-size:13px;font-weight:600;color:#E8D9A8;margin:0 0 10px">Aria's eye color contradicts Chapter 2</p>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;font-family:var(--font-serif);font-size:13.5px;line-height:1.5;color:#A89878">
+            <div style="background:#0F0F0F;border-radius:6px;padding:10px 12px"><span style="font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:#6B6359;display:block;margin-bottom:6px;font-family:var(--font-sans)">Ch. 2</span>"…her <em style="color:#C96A5E">grey eyes</em> catching the lamplight."</div>
+            <div style="background:#0F0F0F;border-radius:6px;padding:10px 12px"><span style="font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:#6B6359;display:block;margin-bottom:6px;font-family:var(--font-sans)">Ch. 11</span>"…she fixed him with her <em style="color:#C96A5E">green stare</em>."</div>
+          </div>
+        </div>
+        <div style="display:flex;gap:8px">
+          <span style="font-size:12px;font-weight:600;color:#0D0D0D;background:#D4AF37;border-radius:5px;padding:7px 14px">Acknowledge</span>
+          <span style="font-size:12px;color:#A89878;border:1px solid rgba(255,255,255,.12);border-radius:5px;padding:7px 14px">Ask Coach to rewrite</span>
+          <span style="font-size:12px;color:#6B6359;border:1px solid rgba(255,255,255,.08);border-radius:5px;padding:7px 14px">Intentional</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CODEX -->
+<section id="codex" style="padding:90px 48px;background:#1A1A1A;border-top:1px solid rgba(212,175,55,.12)">
+  <div style="max-width:1060px;margin:0 auto">
+    <div style="max-width:640px;margin-bottom:48px">
+      <p style="font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:#A89878;margin:0 0 18px">The Codex</p>
+      <h2 style="font-family:var(--font-display);font-size:32px;font-weight:500;letter-spacing:.06em;text-transform:uppercase;color:#D4AF37;line-height:1.2;margin:0 0 20px">A living encyclopedia of your world</h2>
+      <p style="font-family:var(--font-serif);font-size:18px;line-height:1.6;color:rgba(232,217,168,.85);margin:0;text-wrap:pretty">Characters, locations, factions, items, and lore — as interconnected dossiers with relationship maps, portrait galleries, and template-aware stats. Teach it your game system and it tracks aptitudes beside narrative arcs.</p>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:18px">
+      <div style="background:#141414;border:1px solid rgba(255,255,255,.06);border-radius:8px;padding:24px">
+        <h3 style="font-size:14px;font-weight:600;color:#D4AF37;margin:0 0 8px;letter-spacing:.04em">Relationship maps</h3>
+        <p style="font-size:14px;line-height:1.6;color:#A89878;margin:0;text-wrap:pretty">Visualize the social web — blood, rivalry, secret alliance — as a force-directed graph you can walk.</p>
+      </div>
+      <div style="background:#141414;border:1px solid rgba(255,255,255,.06);border-radius:8px;padding:24px">
+        <h3 style="font-size:14px;font-weight:600;color:#D4AF37;margin:0 0 8px;letter-spacing:.04em">Template-aware lore</h3>
+        <p style="font-size:14px;line-height:1.6;color:#A89878;margin:0;text-wrap:pretty">Victorian romance or d20 RPG: the Codex learns your system's fields and tracks stats beside arcs.</p>
+      </div>
+      <div style="background:#141414;border:1px solid rgba(255,255,255,.06);border-radius:8px;padding:24px">
+        <h3 style="font-size:14px;font-weight:600;color:#D4AF37;margin:0 0 8px;letter-spacing:.04em">Prose reflection</h3>
+        <p style="font-size:14px;line-height:1.6;color:#A89878;margin:0;text-wrap:pretty">Canonize a detail in prose and the Editor proposes the Codex update. Your world-bible keeps itself current.</p>
+      </div>
+    </div>
+    <p style="margin:32px 0 0"><a href="codex.html" style="font-size:13px;letter-spacing:.08em;text-transform:uppercase;color:#D4AF37;border-bottom:1px solid rgba(212,175,55,.4)">Deep dive: The Codex →</a></p>
+  </div>
+</section>
+
+<!-- EXPLORATIONS -->
+<section id="explorations" style="padding:90px 48px;background:#0D0D0D;border-top:1px solid rgba(255,255,255,.06)">
+  <div style="max-width:1060px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:center">
+    <div style="background:#141414;border:1px solid rgba(212,175,55,.2);border-radius:12px;box-shadow:0 24px 48px rgba(0,0,0,.6);padding:24px">
+      <p style="font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:#6B6359;margin:0 0 14px">Selective Merge — Chapter 7 · Mentor Betrayal → Main</p>
+      <div style="display:flex;flex-direction:column;gap:10px;font-family:var(--font-serif);font-size:14px;line-height:1.55">
+        <div style="display:flex;gap:12px;align-items:flex-start;background:#0F0F0F;border:1px solid rgba(107,142,78,.45);border-radius:8px;padding:12px 14px">
+          <span style="display:inline-flex;align-items:center;gap:5px;color:#6B8E4E;font-family:var(--font-sans);font-size:12px;font-weight:600;flex:none;margin-top:2px"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#6B8E4E" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12.5 9.5 18 20 6.5"></path></svg>take</span>
+          <p style="margin:0;color:#E8D9A8">Maren's hand did not tremble as she poured the second cup — the one with the bitterroot.</p>
+        </div>
+        <div style="display:flex;gap:12px;align-items:flex-start;background:#0F0F0F;border:1px solid rgba(255,255,255,.08);border-radius:8px;padding:12px 14px;opacity:.65">
+          <span style="color:#6B6359;font-family:var(--font-sans);font-size:12px;font-weight:600;flex:none;margin-top:2px">keep</span>
+          <p style="margin:0;color:#A89878">Maren smiled and poured the tea, and for a while the world was warm.</p>
+        </div>
+        <div style="display:flex;gap:12px;align-items:flex-start;background:#0F0F0F;border:1px solid rgba(107,142,78,.45);border-radius:8px;padding:12px 14px">
+          <span style="display:inline-flex;align-items:center;gap:5px;color:#6B8E4E;font-family:var(--font-sans);font-size:12px;font-weight:600;flex:none;margin-top:2px"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#6B8E4E" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12.5 9.5 18 20 6.5"></path></svg>take</span>
+          <p style="margin:0;color:#E8D9A8">"Drink," said the only mother she had ever known.</p>
+        </div>
+      </div>
+      <p style="font-size:12px;color:#6B6359;margin:16px 0 0">Committed as a new version on Main — "merged from Mentor Betrayal."</p>
+    </div>
+    <div>
+      <p style="font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:#A89878;margin:0 0 18px">Explorations</p>
+      <h2 style="font-family:var(--font-display);font-size:32px;font-weight:500;letter-spacing:.06em;text-transform:uppercase;color:#D4AF37;line-height:1.2;margin:0 0 22px">Fearless experimentation</h2>
+      <p style="font-family:var(--font-serif);font-size:18px;line-height:1.6;color:rgba(232,217,168,.85);margin:0 0 14px;text-wrap:pretty">Every project has a permanent Main draft plus any number of explorations — parallel branches for the radical rewrite, the alternate opening, the parked idea. Edits, beats, even Codex changes stay scoped to the branch.</p>
+      <p style="font-family:var(--font-serif);font-size:18px;line-height:1.6;color:rgba(232,217,168,.7);margin:0;text-wrap:pretty">Compare any version side by side and cherry-pick paragraphs back. Merge whole branches when the experiment becomes canon. Archive the rest — nothing is ever lost.</p>
+      <p style="margin:28px 0 0"><a href="explorations.html" style="font-size:13px;letter-spacing:.08em;text-transform:uppercase;color:#D4AF37;border-bottom:1px solid rgba(212,175,55,.4)">Deep dive: Explorations →</a></p>
+    </div>
+  </div>
+</section>
+
+<!-- GAME TABLE -->
+<section id="gametable" style="padding:90px 48px;background:#1A1A1A;border-top:1px solid rgba(212,175,55,.12)">
+  <div style="max-width:1060px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:center">
+    <div>
+      <p style="font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:#A89878;margin:0 0 18px">The Game Table</p>
+      <h2 style="font-family:var(--font-display);font-size:32px;font-weight:500;letter-spacing:.06em;text-transform:uppercase;color:#D4AF37;line-height:1.2;margin:0 0 22px">Playtest before you publish</h2>
+      <p style="font-family:var(--font-serif);font-size:18px;line-height:1.6;color:rgba(232,217,168,.85);margin:0 0 14px;text-wrap:pretty">A character forge, an aptitude and dice engine, and an AI Game Master that runs live sessions inside your own setting. Teach Mythos your rules — D&amp;D 5e or a system of your own invention — and the Codex tracks stats beside story.</p>
+      <p style="font-family:var(--font-serif);font-size:18px;line-height:1.6;color:rgba(232,217,168,.7);margin:0;text-wrap:pretty">For RPG designers, this is the loop: write the rules, forge the characters, roll the dice, and watch where the system sings or breaks.</p>
+    </div>
+    <div style="background:#141414;border:1px solid rgba(212,175,55,.2);border-radius:12px;box-shadow:0 24px 48px rgba(0,0,0,.6);padding:28px">
+      <div style="display:flex;align-items:center;gap:16px;margin-bottom:20px">
+        <svg width="52" height="52" viewBox="0 0 24 24" fill="none" stroke="#D4AF37" stroke-width="1.3" style="animation:dicePulse 2.4s ease-in-out infinite"><path d="M12 2 3 7v10l9 5 9-5V7l-9-5z"></path><path d="M12 2v10M3 7l9 5 9-5M12 22V12"></path></svg>
+        <div>
+          <p style="font-family:var(--font-mono);font-size:22px;color:#D4AF37;margin:0">d20 → 17 <span style="font-size:14px;color:#B8922E">+3 Resolve</span></p>
+          <p style="font-size:12px;color:#6B6359;margin:2px 0 0">Aptitude check · Persuade the toll-keeper</p>
+        </div>
+      </div>
+      <div style="background:rgba(212,175,55,.06);border:1px solid rgba(212,175,55,.2);border-radius:8px;padding:14px 16px">
+        <p style="font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:#B8922E;margin:0 0 8px">Game Master</p>
+        <p style="font-family:var(--font-serif);font-size:15px;line-height:1.6;color:#E8D9A8;margin:0">Success. Brom studies the seal on your ledger, then waves the cart through — but he pockets the ring anyway. Mark one debt with the Sultanate.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ATLAS + CHRONICLE + LUMINA -->
+<section id="atlas" style="padding:90px 48px;background:#0D0D0D;border-top:1px solid rgba(255,255,255,.06)">
+  <div style="max-width:1060px;margin:0 auto">
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:20px">
+      <div style="background:#141414;border:1px solid rgba(212,175,55,.12);border-radius:8px;padding:30px 28px">
+        <h3 style="font-family:var(--font-display);font-size:18px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;color:#D4AF37;margin:0 0 12px">The Atlas</h3>
+        <p style="font-size:14.5px;line-height:1.6;color:#A89878;margin:0 0 16px;text-wrap:pretty">Illustrated parchment maps with pins bound to Codex entries. Ask the AI to plot a route and it respects your geography — and your politics.</p>
+        <div style="height:110px;border:1px solid rgba(212,175,55,.2);border-radius:6px;background:radial-gradient(ellipse at 30% 40%,rgba(212,175,55,.12),transparent 60%),#0F0F0F;display:flex;align-items:center;justify-content:center">
+          <svg width="140" height="70" viewBox="0 0 140 70" fill="none"><path d="M10 55 Q35 20 60 38 T120 22" stroke="#D4AF37" stroke-width="1.2" stroke-dasharray="4 4"></path><circle cx="10" cy="55" r="4" fill="#0D0D0D" stroke="#D4AF37" stroke-width="1.4"></circle><circle cx="120" cy="22" r="4" fill="#D4AF37"></circle><path d="M30 60l6-3M95 50l7-2M50 15l5 3" stroke="#6B6359" stroke-width="1"></path></svg>
+        </div>
+      </div>
+      <div id="chronicle" style="background:#141414;border:1px solid rgba(212,175,55,.12);border-radius:8px;padding:30px 28px">
+        <h3 style="font-family:var(--font-display);font-size:18px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;color:#D4AF37;margin:0 0 12px">The Chronicle</h3>
+        <p style="font-size:14.5px;line-height:1.6;color:#A89878;margin:0 0 16px;text-wrap:pretty">A horizontal, multi-thread timeline of your world's history — with per-chapter presence scans showing how deep history touches the scene you're drafting.</p>
+        <div style="height:110px;border:1px solid rgba(212,175,55,.2);border-radius:6px;background:#0F0F0F;padding:18px 16px;display:flex;flex-direction:column;justify-content:space-around">
+          <div style="display:flex;align-items:center;gap:6px"><span style="font-size:9px;letter-spacing:.1em;color:#6B6359;width:44px">EMPIRE</span><div style="flex:1;height:2px;background:linear-gradient(90deg,rgba(212,175,55,.5),rgba(212,175,55,.1))"></div><span style="width:7px;height:7px;border-radius:50%;background:#D4AF37;box-shadow:0 0 8px rgba(212,175,55,.6)"></span></div>
+          <div style="display:flex;align-items:center;gap:6px"><span style="font-size:9px;letter-spacing:.1em;color:#6B6359;width:44px">ELARA</span><div style="flex:1;height:2px;background:rgba(168,152,120,.3)"></div><span style="width:6px;height:6px;border-radius:50%;border:1px solid #B8922E"></span></div>
+          <div style="display:flex;align-items:center;gap:6px"><span style="font-size:9px;letter-spacing:.1em;color:#6B6359;width:44px">CLANS</span><div style="flex:1;height:2px;background:rgba(107,99,89,.4)"></div><span style="width:6px;height:6px;border-radius:50%;border:1px solid #6B6359"></span></div>
+        </div>
+      </div>
+      <div id="lumina" style="background:#141414;border:1px solid rgba(212,175,55,.12);border-radius:8px;padding:30px 28px">
+        <h3 style="font-family:var(--font-display);font-size:18px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;color:#D4AF37;margin:0 0 12px">Lumina</h3>
+        <p style="font-size:14.5px;line-height:1.6;color:#A89878;margin:0 0 16px;text-wrap:pretty">When it's time to just write, the chrome dissolves. A glassmorphic writing cabin — the one deliberate departure from charcoal and gold.</p>
+        <div style="height:110px;border-radius:6px;background:linear-gradient(135deg,#4A6B8A,#7FA9C9 60%,#BFD7E8);display:flex;align-items:center;justify-content:center">
+          <div style="background:rgba(255,255,255,.45);backdrop-filter:blur(8px);border-radius:8px;padding:10px 22px;font-family:var(--font-serif);font-size:14px;color:#2A3B4A;font-style:italic">…and the page was quiet.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- THEMES -->
+<section id="themes" style="padding:90px 48px;background:#0D0D0D;border-top:1px solid rgba(255,255,255,.06)">
+  <div style="max-width:1060px;margin:0 auto">
+    <div style="text-align:center;margin-bottom:48px">
+      <p style="font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:#A89878;margin:0 0 16px">Themes</p>
+      <h2 style="font-family:var(--font-display);font-size:32px;font-weight:500;letter-spacing:.06em;text-transform:uppercase;color:#D4AF37;margin:0 0 16px">Eleven faces for one desk</h2>
+      <p style="font-family:var(--font-serif);font-size:18px;color:rgba(232,217,168,.8);max-width:620px;margin:0 auto;text-wrap:pretty">Aurum is the signature — but the desk changes with the light. Crafted skins carry their own typefaces; the Daylight set holds six WCAG-verified light themes. Select one below. If you have the skills, create and import your own theme.</p>
+    </div>
+    <div id="theme-chips" style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-bottom:28px"></div>
+    <div id="theme-preview" class="theme-preview" style="max-width:760px;margin:0 auto;border-radius:12px;overflow:hidden;border:1px solid rgba(212,175,55,.25);box-shadow:0 24px 48px rgba(0,0,0,.6)">
+      <div id="tp-chrome-top" style="display:flex;align-items:center;gap:10px;padding:11px 16px;border-bottom:1px solid rgba(212,175,55,.15)">
+        <span style="display:flex;gap:6px"><span class="tp-dot" style="width:9px;height:9px;border-radius:50%"></span><span class="tp-dot" style="width:9px;height:9px;border-radius:50%"></span><span class="tp-dot" style="width:9px;height:9px;border-radius:50%"></span></span>
+        <span id="tp-title" style="font-size:11.5px;margin-left:6px">Chapter VII: The Echo of Aethel</span>
+        <span id="tp-name" style="margin-left:auto;font-size:10px;letter-spacing:.1em;text-transform:uppercase"></span>
+      </div>
+      <div id="tp-body" style="padding:34px 44px 38px;font-size:18px;line-height:1.75">
+        <p style="margin:0 0 16px">The lamplight guttered as she crossed the threshold of the <span id="tp-pill" style="font-family:var(--font-mono);font-size:.82em;border-radius:4px;padding:1px 6px">Highpass Inn</span>, boots ringing on stone worn smooth by a century of travelers.</p>
+        <p id="tp-p2" style="margin:0;opacity:.85">Brom looked up from the ledger, and for a moment the years fell away from his scarred face.</p>
+      </div>
+      <div id="tp-chrome-bot" style="display:flex;align-items:center;gap:14px;padding:9px 16px;border-top:1px solid rgba(212,175,55,.15);font-size:10.5px">
+        <span>The Ledger</span><span>1,220 words</span>
+        <span id="tp-blurb" style="margin-left:auto;font-family:var(--font-serif);font-style:italic"></span>
+      </div>
+    </div>
+    <p style="text-align:center;font-size:12px;color:#6B6359;margin:24px 0 0">Themes apply live and revert with Cmd-Shift-0. Install new looks as single-file .mythos-theme bundles.</p>
+  </div>
+</section>
+
+<!-- EXPORT + ANALYTICS + PRIVACY -->
+<section id="export" style="padding:90px 48px;background:#1A1A1A;border-top:1px solid rgba(212,175,55,.12)">
+  <div style="max-width:1060px;margin:0 auto;display:grid;grid-template-columns:repeat(3,1fr);gap:20px">
+    <div style="background:#141414;border:1px solid rgba(255,255,255,.06);border-radius:8px;padding:30px 28px">
+      <h3 style="font-family:var(--font-display);font-size:18px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;color:#D4AF37;margin:0 0 12px">Professional Export</h3>
+      <p style="font-size:14.5px;line-height:1.6;color:#A89878;margin:0 0 18px;text-wrap:pretty">One click to PDF, EPUB, DOCX, or Markdown — with act title pages, scene separators, and page numbers. From vault to submission-ready manuscript.</p>
+      <div style="display:flex;gap:8px">
+        <span style="font-family:var(--font-mono);font-size:11px;color:#B8922E;border:1px solid rgba(212,175,55,.3);border-radius:4px;padding:4px 10px">PDF</span>
+        <span style="font-family:var(--font-mono);font-size:11px;color:#B8922E;border:1px solid rgba(212,175,55,.3);border-radius:4px;padding:4px 10px">EPUB</span>
+        <span style="font-family:var(--font-mono);font-size:11px;color:#B8922E;border:1px solid rgba(212,175,55,.3);border-radius:4px;padding:4px 10px">DOCX</span>
+        <span style="font-family:var(--font-mono);font-size:11px;color:#B8922E;border:1px solid rgba(212,175,55,.3);border-radius:4px;padding:4px 10px">MD</span>
+      </div>
+    </div>
+    <div id="analytics" style="background:#141414;border:1px solid rgba(255,255,255,.06);border-radius:8px;padding:30px 28px">
+      <h3 style="font-family:var(--font-display);font-size:18px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;color:#D4AF37;margin:0 0 12px">Writing Support</h3>
+      <p style="font-size:14.5px;line-height:1.6;color:#A89878;margin:0 0 18px;text-wrap:pretty">Daily word goals, per-chapter beat checklists, and analytics that read like a ledger, not a game. Word counts stay in the status bar — dry, where they belong.</p>
+      <div style="display:flex;align-items:baseline;gap:10px"><span style="font-family:var(--font-display);font-size:30px;color:#E8D9A8">1,220</span><span style="font-size:12px;color:#6B6359">of 1,500 words today</span></div>
+      <div style="height:4px;background:#2A2A2A;border-radius:2px;margin-top:10px;overflow:hidden"><div style="height:100%;width:81%;background:linear-gradient(90deg,#B8922E,#D4AF37)"></div></div>
+    </div>
+    <div id="privacy" style="background:#141414;border:1px solid rgba(212,175,55,.35);border-radius:8px;padding:30px 28px;box-shadow:inset 0 0 24px rgba(212,175,55,.05)">
+      <h3 style="font-family:var(--font-display);font-size:18px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;color:#D4AF37;margin:0 0 12px">Private by Design</h3>
+      <p style="font-size:14.5px;line-height:1.6;color:#A89878;margin:0 0 18px;text-wrap:pretty">A native desktop app. Your manuscript and knowledge base live on your disk in a robust .mythos vault. AI runs on your keys — Anthropic, OpenAI, Gemini — or fully offline with LM Studio / Ollama. One master toggle shuts it all off.</p>
+      <div style="display:flex;flex-direction:column;gap:7px;font-size:13px;color:#E8D9A8">
+        <span style="display:inline-flex;align-items:center;gap:8px;color:#B8922E"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#B8922E" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12.5 9.5 18 20 6.5"></path></svg>Local-first storage</span>
+        <span style="display:inline-flex;align-items:center;gap:8px;color:#B8922E"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#B8922E" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12.5 9.5 18 20 6.5"></path></svg>Bring your own AI provider</span>
+        <span style="display:inline-flex;align-items:center;gap:8px;color:#B8922E"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#B8922E" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12.5 9.5 18 20 6.5"></path></svg>Works fully offline</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- IPAD -->
+<section id="ipad" style="padding:90px 48px;background:#0D0D0D;border-top:1px solid rgba(255,255,255,.06)">
+  <div style="max-width:1060px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:center">
+    <div>
+      <p style="font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:#A89878;margin:0 0 18px">The iPad Companion — Coming Soon</p>
+      <h2 style="font-family:var(--font-display);font-size:32px;font-weight:500;letter-spacing:.06em;text-transform:uppercase;color:#D4AF37;line-height:1.2;margin:0 0 22px">The manuscript leaves the desk</h2>
+      <p style="font-family:var(--font-serif);font-size:18px;line-height:1.6;color:rgba(232,217,168,.85);margin:0 0 14px;text-wrap:pretty">A full read-and-write companion for iPad, working from the same .mythos vault as your desktop. Draft a scene in the garden, revise a chapter in bed, consult the Codex from the reading chair — everything is waiting at your desk when you return.</p>
+      <p style="font-family:var(--font-serif);font-size:18px;line-height:1.6;color:rgba(232,217,168,.7);margin:0 0 22px;text-wrap:pretty">The companion is part of Era 4 of the roadmap and will be included with every license — lifetime and subscription alike, at no further charge.</p>
+      <a href="pricing.html" style="font-size:13px;letter-spacing:.08em;text-transform:uppercase;color:#D4AF37;border-bottom:1px solid rgba(212,175,55,.4)">Be writing when it arrives →</a>
+    </div>
+    <div style="display:flex;justify-content:center">
+      <div style="width:340px;background:#0A0A0A;border:1px solid rgba(255,255,255,.14);border-radius:22px;padding:14px;box-shadow:0 24px 48px rgba(0,0,0,.7)">
+        <div style="background:#1A1A1A;border-radius:12px;overflow:hidden;border:1px solid rgba(212,175,55,.15)">
+          <div style="display:flex;align-items:center;justify-content:space-between;padding:9px 14px;background:#0F0F0F;border-bottom:1px solid rgba(255,255,255,.06)">
+            <span style="font-family:var(--font-display);font-size:10px;letter-spacing:.14em;color:#D4AF37">MYTHOS</span>
+            <span style="font-size:9.5px;color:#6B6359">Chapter VII · synced</span>
+          </div>
+          <div style="padding:22px 20px 26px;font-family:var(--font-serif);font-size:13.5px;line-height:1.75;color:rgba(232,217,168,.9)">
+            <p style="margin:0 0 12px">The lamplight guttered as she crossed the threshold of the <span style="font-family:var(--font-mono);font-size:.82em;color:#D4AF37;background:rgba(212,175,55,.08);border:1px solid rgba(212,175,55,.35);border-radius:3px;padding:0 5px">Highpass Inn</span>.</p>
+            <p style="margin:0;opacity:.8">Brom looked up from the ledger, and the years fell away from his scarred face.</p>
+          </div>
+          <div style="display:flex;align-items:center;gap:10px;padding:8px 14px;background:#0F0F0F;border-top:1px solid rgba(255,255,255,.06);font-size:9.5px;color:#6B6359">
+            <span style="display:inline-flex;align-items:center;gap:5px;color:#6B8E4E"><span style="width:5px;height:5px;border-radius:50%;background:#6B8E4E"></span>Vault in sync</span>
+            <span style="margin-left:auto">1,220 words</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section style="padding:100px 48px;background:#0D0D0D;border-top:1px solid rgba(212,175,55,.12);text-align:center">
+  <span style="display:inline-block;width:44px;height:44px;opacity:.85;margin-bottom:24px;background:#D4AF37;-webkit-mask:url('assets/sigils/compass-rose.svg') center/contain no-repeat;mask:url('assets/sigils/compass-rose.svg') center/contain no-repeat"></span>
+  <h2 style="font-family:var(--font-display);font-size:36px;font-weight:500;letter-spacing:.06em;text-transform:uppercase;color:#D4AF37;margin:0 0 18px">The desk is ready.</h2>
+  <p style="font-family:var(--font-serif);font-size:19px;color:rgba(232,217,168,.8);max-width:480px;margin:0 auto 36px;text-wrap:pretty">Every feature. No account. Your world never leaves your machine.</p>
+  <div style="display:flex;gap:16px;justify-content:center;flex-wrap:wrap">
+    <a href="pricing.html" class="buy-btn" style="font-size:15px;padding:15px 34px">Buy Mythos — $59 once</a>
+    <a href="pricing.html" style="font-size:15px;font-weight:500;color:#D4AF37;padding:14px 30px;border-radius:6px;border:1px solid rgba(212,175,55,.4);border-bottom:1px solid rgba(212,175,55,.4);transition:all 200ms">See pricing</a>
+  </div>
+</section>
+
+<footer style="background:#0D0D0D;border-top:1px solid rgba(212,175,55,.12);padding:48px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:24px">
+  <div style="display:flex;align-items:center;gap:12px">
+    <span style="display:inline-block;width:22px;height:22px;opacity:.8;background:#D4AF37;-webkit-mask:url('assets/logo-m.svg') center/contain no-repeat;mask:url('assets/logo-m.svg') center/contain no-repeat"></span>
+    <span style="font-size:12px;color:#6B6359">© 2026 Tanuki Vision. Your world. Your voice. Enhanced.</span>
+  </div>
+  <div style="display:flex;gap:28px">
+    <a href="landing.html" class="nav-link" style="font-size:12px">Home</a>
+    <a href="pricing.html" class="nav-link" style="font-size:12px">Pricing</a>
+    <a href="https://github.com/holsat/mythos/releases/latest" class="nav-link" style="font-size:12px">Releases</a>
+  </div>
+</footer>
+
+</div>
+
+<script>
+(function(){
+  var T = [
+    {name:"Aurum",bg:"#1A1A1A",chrome:"#0F0F0F",text:"#E8D9A8",muted:"#6B6359",accent:"#D4AF37",hairline:"rgba(212,175,55,.15)",dotMuted:"#3a3a3a",pillBg:"rgba(212,175,55,.08)",pillBorder:"rgba(212,175,55,.35)",dot:"#D4AF37",blurb:"Charcoal and gold — a grimoire by lamplight."},
+    {name:"Vellum",bg:"#EFE6D0",chrome:"#E4D8BC",text:"#3A3226",muted:"#8A7C60",accent:"#8C6A2F",hairline:"rgba(90,74,40,.2)",dotMuted:"#C9BC9C",pillBg:"rgba(140,106,47,.1)",pillBorder:"rgba(140,106,47,.4)",dot:"#EFE6D0",blurb:"Aged parchment and iron-gall ink."},
+    {name:"Ukiyo",bg:"#1C1F2E",chrome:"#141624",text:"#E6E0D4",muted:"#6E7288",accent:"#C96A5E",hairline:"rgba(201,106,94,.2)",dotMuted:"#33374A",pillBg:"rgba(201,106,94,.1)",pillBorder:"rgba(201,106,94,.4)",dot:"#C96A5E",blurb:"Indigo and vermilion — woodblock calm."},
+    {name:"Oracle",bg:"#16121F",chrome:"#0F0C17",text:"#D8D2E8",muted:"#655C7A",accent:"#A08AD6",hairline:"rgba(160,138,214,.2)",dotMuted:"#2C2440",pillBg:"rgba(160,138,214,.1)",pillBorder:"rgba(160,138,214,.4)",dot:"#A08AD6",blurb:"Midnight violet, read by candlelight."},
+    {name:"Lumina",bg:"linear-gradient(135deg,#5A7B9A,#8FB4D4)",chrome:"#4A6B8A",text:"#F4F9FD",muted:"#C5D8E8",accent:"#EAF3FA",hairline:"rgba(255,255,255,.25)",dotMuted:"#7FA9C9",pillBg:"rgba(255,255,255,.25)",pillBorder:"rgba(255,255,255,.5)",dot:"#BFD7E8",blurb:"The focus-mode blue, everywhere."},
+    {name:"Daybreak",bg:"#FBF3E4",chrome:"#F2E6CE",text:"#4A4030",muted:"#9A8C70",accent:"#C98A2E",hairline:"rgba(160,130,70,.25)",dotMuted:"#DECFAE",pillBg:"rgba(201,138,46,.1)",pillBorder:"rgba(201,138,46,.4)",dot:"#FBF3E4",blurb:"Warm morning light on the desk. Daylight set."},
+    {name:"Porcelain",bg:"#F4F6F8",chrome:"#E8ECF1",text:"#33404E",muted:"#8595A6",accent:"#5B7A99",hairline:"rgba(91,122,153,.25)",dotMuted:"#CBD5DF",pillBg:"rgba(91,122,153,.1)",pillBorder:"rgba(91,122,153,.4)",dot:"#F4F6F8",blurb:"Cool glaze, blue underdrawing. Daylight set."},
+    {name:"Sage",bg:"#EFF3EA",chrome:"#E2E9DA",text:"#3B4634",muted:"#8A9880",accent:"#6B8E4E",hairline:"rgba(107,142,78,.3)",dotMuted:"#C8D4BD",pillBg:"rgba(107,142,78,.1)",pillBorder:"rgba(107,142,78,.4)",dot:"#EFF3EA",blurb:"Herb-garden green. Daylight set."},
+    {name:"Quill",bg:"#FAF8F2",chrome:"#EFEBE0",text:"#2B2B2B",muted:"#8F8A7E",accent:"#4A4438",hairline:"rgba(43,43,43,.2)",dotMuted:"#D8D2C4",pillBg:"rgba(43,43,43,.06)",pillBorder:"rgba(43,43,43,.35)",dot:"#FAF8F2",blurb:"Ivory and ink, nothing else. Daylight set."},
+    {name:"Meridian",bg:"#F3F1EA",chrome:"#E7E4D8",text:"#2E3A4E",muted:"#84806F",accent:"#27456B",hairline:"rgba(39,69,107,.25)",dotMuted:"#D2CEBE",pillBg:"rgba(39,69,107,.08)",pillBorder:"rgba(39,69,107,.35)",dot:"#F3F1EA",blurb:"Chart-room navy on cream. Daylight set."},
+    {name:"Rosewater",bg:"#FAF0EF",chrome:"#F1E2E0",text:"#4E3A3A",muted:"#A18686",accent:"#B06A6A",hairline:"rgba(176,106,106,.3)",dotMuted:"#E2CCCA",pillBg:"rgba(176,106,106,.1)",pillBorder:"rgba(176,106,106,.4)",dot:"#FAF0EF",blurb:"A blush of late light. Daylight set."}
+  ];
+
+  var chipsEl = document.getElementById('theme-chips');
+  var sel = 0;
+
+  T.forEach(function(t, i){
+    var chip = document.createElement('button');
+    chip.type = 'button';
+    chip.className = 'theme-chip' + (i === 0 ? ' selected' : '');
+    chip.setAttribute('aria-pressed', i === 0 ? 'true' : 'false');
+    var dot = document.createElement('span');
+    dot.className = 'dot';
+    dot.style.background = (t.dot === t.bg) ? t.accent : t.dot;
+    chip.appendChild(dot);
+    chip.appendChild(document.createTextNode(t.name));
+    chip.addEventListener('click', function(){ apply(i); });
+    chipsEl.appendChild(chip);
+  });
+
+  function apply(i){
+    sel = i;
+    var t = T[i];
+    var chips = chipsEl.querySelectorAll('.theme-chip');
+    chips.forEach(function(c, idx){
+      c.classList.toggle('selected', idx === i);
+      c.setAttribute('aria-pressed', idx === i ? 'true' : 'false');
+    });
+
+    document.getElementById('tp-body').style.background = t.bg;
+    document.getElementById('tp-body').style.color = t.text;
+    document.getElementById('tp-body').style.fontFamily = 'var(--font-serif)';
+
+    var chromeTop = document.getElementById('tp-chrome-top');
+    var chromeBot = document.getElementById('tp-chrome-bot');
+    chromeTop.style.background = t.chrome;
+    chromeBot.style.background = t.chrome;
+    chromeTop.style.borderBottomColor = t.hairline;
+    chromeBot.style.borderTopColor = t.hairline;
+    chromeBot.style.color = t.muted;
+    document.getElementById('tp-title').style.color = t.muted;
+    document.getElementById('tp-name').style.color = t.accent;
+    document.getElementById('tp-name').textContent = t.name;
+
+    var pill = document.getElementById('tp-pill');
+    pill.style.color = t.accent;
+    pill.style.background = t.pillBg;
+    pill.style.border = '1px solid ' + t.pillBorder;
+
+    var dots = document.querySelectorAll('#tp-chrome-top .tp-dot');
+    dots.forEach(function(d){ d.style.background = t.dotMuted; });
+
+    document.getElementById('tp-blurb').textContent = t.blurb;
+  }
+
+  apply(0);
+})();
+</script>
+
+</body>
+</html>
