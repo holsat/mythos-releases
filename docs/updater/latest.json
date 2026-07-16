@@ -1,0 +1,23 @@
+{
+  "version": "0.1.22",
+  "notes": "",
+  "pub_date": "2026-07-16T18:52:15Z",
+  "platforms": {
+    "darwin-aarch64": {
+      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUclU3U1NwdmZkRFNudiswZ1VZUlhYcjlzNldOb1B6cXFQb041VTA3RjVBVWd4dnhUYzdmTU9WRDNuZkljcW1HZUwvM0Q1SEhYbGJvQ21EdC92Sy84V1lPRG5vTytZZGdRPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzg0MjI3OTA3CWZpbGU6TXl0aG9zLmFwcC50YXIuZ3oKTkU2dTFtcXBzNkxaalM5VmhWblhtS2N0WmlhMDh6MUNVbkRTRXo2Z1phTTIvWm4zeXZJRDRtVjhPMjNvYjNkL2FPZGdnUmhLWlg5VUFpVXY2WkRZQlE9PQo=",
+      "url": "https://github.com/holsat/mythos-releases/releases/download/v0.1.22/Mythos.app.tar.gz"
+    },
+    "linux-x86_64-appimage": {
+      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUclU3U1NwdmZkRFZ2WHNoV2RkTUx4WnR0dWdsRmU1M1VyM2dBbm5hYW9oQjhlYS9VRDVOZUJqQnk4aVBwVjh6ZnhLRE9CbXVTSFZQSWJYTUxPQmdoQTlLejVZTk1tSWdRPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzg0MjI3MzMyCWZpbGU6TXl0aG9zXzAuMS4yMl9hbWQ2NC5BcHBJbWFnZQpkRmJZYmxXMlhhbUdDRi9CUmhyazZYOCtnODFLdU9tQjhwUnRhekxVR21wYWt1MWNUam5ZclB3RHhQZjhJV04xSStnU0JHcWYxT0ZFWG1NRDZ1RHJDZz09Cg==",
+      "url": "https://github.com/holsat/mythos-releases/releases/download/v0.1.22/Mythos_0.1.22_amd64.AppImage"
+    },
+    "windows-x86_64-nsis": {
+      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUclU3U1NwdmZkRFpMWkc4TndTcUdaaFpPK3EzckRnb2lZeXZHelRrU3c3NUVTQ1lUeGgvQ1ZVK3hEVGdnbnpaT2RPTU1Ub01JMHVBbzUxRy96anFkdWhFdGZlRFNpOUFBPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzg0MjI2NDM4CWZpbGU6TXl0aG9zXzAuMS4yMl94NjQtc2V0dXAuZXhlClpJRkg4cVM0VXhzcHozcEhYUEtJR2plUFlJVjE3MFlmdXh3emhpd2NPT0U5M0pkRDl3YXNUZlpueW5zQ0o1Y2FkY2RuN2YvMFFXUDhxd2pjNGxuYkFBPT0K",
+      "url": "https://github.com/holsat/mythos-releases/releases/download/v0.1.22/Mythos_0.1.22_x64-setup.exe"
+    },
+    "windows-x86_64-msi": {
+      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUclU3U1NwdmZkRFZaOTU3azNCVXozMVAzckNGNmZMWU12M082Smd6NVBXdVVnck5xN1IzTlJyeTc2NUE1ZFdHWVRmUjZ0dVRydU9LN2VtOFFlbVZqTkpsYnUxblVjT2dRPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzg0MjI2NDM4CWZpbGU6TXl0aG9zXzAuMS4yMl94NjRfZW4tVVMubXNpCkJIV2xtSit0cDB5WkltRHRGZkdnMk1HSHd4MG1Xb3U0MjZ3cTdLSzJpY0pZZXhib3pRSGx3MWRSMExRVVFRQU13TDQvSlFJS2tYbHZuUmdQbkxVTURBPT0K",
+      "url": "https://github.com/holsat/mythos-releases/releases/download/v0.1.22/Mythos_0.1.22_x64_en-US.msi"
+    }
+  }
+}
