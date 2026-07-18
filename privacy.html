@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Mythos — Where your prose goes</title>
-<meta name="description" content="An honest, technical account of how Mythos handles your writing and data — what stays local, what gets sent to your AI providers when you invoke a feature, and how to lock the whole thing down if you want to.">
+<meta name="description" content="What stays local, what gets sent to your AI providers when you invoke a feature, and how to lock the whole thing down if you want to.">
 <link rel="icon" type="image/svg+xml" href="assets/logo-m.svg">
 <link rel="stylesheet" href="assets/colors_and_type.css">
 <style>
@@ -101,13 +101,13 @@
       <p>You can turn off <strong>all</strong> AI features by going to <strong>Settings → Muse</strong> and toggling off the AI subsystem. When it's off, no AI service will function — Mythos operates as a plain writing app until you turn it back on.</p>
     </div>
 
-    <h2>Two kinds of AI work, two different answers</h2>
+    <h2>DIfferent kinds of AI work, different answers</h2>
 
-    <p>When you invoke an AI feature — asking the Muse a question, having the Coach draft an outline, running the Editor over a scene — Mythos sends the AI what it needs to do the job. But there are two very different kinds of job, and they share different amounts of your text.</p>
+    <p>When you invoke an AI feature — asking the Muse a question, having the Coach draft an outline, running the Editor over a scene — Mythos sends the AI what it needs to do the job. But there are different kinds of jobs, and they share different amounts of your text.</p>
 
-    <p><strong style="color:#D4AF37">Job 1 — Generation.</strong> The AI reads text and writes text back. The Muse's answers, the Coach's proposed outlines, the Editor's flags, the timeline / Codex / Atlas scans, and the AI grammar pass are all this. For each of these, Mythos sends <em>only what the feature needs</em> to reason about: a scene, a chapter, a paragraph, a Codex entry — never your whole project as one giant payload. What comes back is what shows up in the app.</p>
+    <p><strong style="color:#D4AF37">Generation Jobs.</strong> The AI reads text and writes text back. The Muse's answers, the Coach's proposed outlines, the Editor's flags, the timeline / Codex / Atlas scans, and the AI grammar pass are all this. For each of these, Mythos sends <em>only what the feature needs</em> to reason about: a scene, a chapter, a paragraph, a Codex entry — never your whole project or manuscript all at once. What comes back is what shows up in the app.</p>
 
-    <p><strong style="color:#D4AF37">Job 2 — Indexing.</strong> For the Muse to answer questions about your project, the app builds a Knowledge Base — a searchable index of what you've written. That index is a set of fingerprints stored as large sets of numbers; one fingerprint per chunk of prose. The fingerprints are what Mythos stores and what your computer and the AI understand. The chunks of text themselves — roughly a paragraph at a time — are what it briefly sends to have the fingerprints created. This happens once when you first open a project, and again quietly as you edit. The fingerprints stay on your computer. The chunks pass through whichever AI provider you have configured to compute them.</p>
+    <p><strong style="color:#D4AF37">Indexing, Knowledge Base Jobs.</strong> For the Muse to answer questions about your project, the app automatically builds a Knowledge Base, <em>unless AI services have been turned off.</em> The Knowledge base is a searchable and queryable index of what you've written. That exists as a set of fingerprints stored as large sets of numbers; one fingerprint per chunk of prose. The fingerprints are what Mythos stores and what your computer and the AI understand. The chunks of text themselves — roughly a paragraph at a time — are what it briefly sends to have the fingerprints created. This happens once when you first open a project, and again quietly as you edit. The fingerprints stay on your computer. The chunks pass through whichever AI provider you have configured to compute them.</p>
 
     <p>The difference matters because you configure the two jobs independently, per service, in <strong>Settings → Muse</strong>. It's completely reasonable to pair, say, Anthropic's Claude for chat with a local model for indexing — so your prose is never sent over the network just to be turned into search fingerprints.</p>
 
@@ -240,13 +240,13 @@
       </div>
     </div>
 
-    <p>Your projects are local files on your disk. If you want them on multiple machines, that's your Dropbox / iCloud / Google Drive choice, not something Mythos manages.</p>
+    <p>Your projects are local files on your disk. If you want them on multiple machines, that's your Dropbox / iCloud / Google Drive choice, not something Mythos manages. Please note that storing a Mythos project on a cloud drive that continually syncs changes to the cloud, like Dropbox/iCloud/Google Drive or OneDrive is likely to result in poor Mythos performance.</p>
 
     <h2>If none of this is enough</h2>
 
-    <p>The most privacy-conservative configuration is this: install a local model, don't add any cloud provider key, and optionally disable image generation (which sends only your typed prompt anyway). <strong style="color:#D4AF37">In this configuration, no project data ever leaves your computer.</strong> Some testers use Mythos exclusively this way, and every feature that can work with a local model still works.</p>
+    <p>The most privacy-conservative configuration is this: install local models, don't add any cloud provider keys, and <em>optionally</em> disable image generation <em>which sends only your typed prompt and does not share any of your data.</em> <strong style="color:#D4AF37">In this configuration, no project data ever leaves your computer.</strong> Some testers use Mythos exclusively this way, and every feature that can work with a local model still works, <em>but will be slower than using a cloud hosted model</em>.</p>
 
-    <p>If you enable the iPad companion, your data will travel over your local network from the desktop to the iPad — but the iPad uses the same AI configuration as the desktop, so if you've configured a local-only setup, nothing leaves your local network in that case either.</p>
+    <p>If you enable the iPad companion, your data will travel over your local network from the desktop Mythos app to the iPad. The iPad app connects to the Mythos app running on your computer and uses the same application and AI configuration as the desktop application, so if you've configured a local-only setup, nothing leaves your local network.</p>
 
     <p>If you're still not sure what a specific feature sends, the fastest way to find out is to run it against a tiny throwaway project — one chapter, three Codex entries — while watching your provider's API dashboard. Whatever shows up there is exactly what left your computer.</p>
 
