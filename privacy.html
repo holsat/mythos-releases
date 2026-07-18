@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mythos — Where your prose goes</title>
+<meta name="description" content="An honest, technical account of how Mythos handles your writing and data — what stays local, what gets sent to your AI providers when you invoke a feature, and how to lock the whole thing down if you want to.">
+<link rel="icon" type="image/svg+xml" href="assets/logo-m.svg">
+<link rel="stylesheet" href="assets/colors_and_type.css">
+<style>
+  html{scroll-behavior:smooth}
+  body{margin:0;background:#0D0D0D;overflow-x:hidden}
+  ::selection{background:rgba(212,175,55,.25)}
+  .nav-link{font-size:13px;letter-spacing:.08em;text-transform:uppercase;color:#A89878;border-bottom:none;transition:color 200ms}
+  .nav-link:hover{color:#D4AF37}
+  .nav-link.active{color:#D4AF37}
+  .buy-btn{font-family:var(--font-sans);font-size:13px;font-weight:600;letter-spacing:.06em;color:#0D0D0D;background:#D4AF37;padding:9px 20px;border-radius:6px;border-bottom:none;transition:background 200ms;cursor:pointer;display:inline-block;text-decoration:none}
+  .buy-btn:hover{background:#E8C547}
+  .js-purchase{cursor:pointer}
+  .prose{font-family:var(--font-serif);font-size:19px;line-height:1.7;color:rgba(232,217,168,.9);max-width:720px;margin:0 auto}
+  .prose > p{margin:0 0 22px;text-wrap:pretty}
+  .prose > h2{font-family:var(--font-display);font-size:26px;font-weight:500;letter-spacing:.06em;text-transform:uppercase;color:#D4AF37;line-height:1.2;margin:56px 0 22px;text-wrap:balance}
+  .prose > h3{font-family:var(--font-display);font-size:20px;font-weight:500;letter-spacing:.06em;text-transform:uppercase;color:#D4AF37;margin:36px 0 14px}
+  .prose ul{margin:0 0 22px;padding:0;list-style:none}
+  .prose ul li{padding:10px 0 10px 22px;position:relative;border-bottom:1px solid rgba(255,255,255,.05)}
+  .prose ul li::before{content:'';position:absolute;left:0;top:19px;width:8px;height:1px;background:#D4AF37}
+  .prose code{font-family:var(--font-mono);font-size:.85em;color:#D4AF37;background:rgba(212,175,55,.08);border:1px solid rgba(212,175,55,.3);border-radius:4px;padding:1px 6px}
+  .prose a{color:#D4AF37;border-bottom:1px solid rgba(212,175,55,.35)}
+  .prose a:hover{border-bottom-color:#D4AF37}
+  .prose em{color:rgba(232,217,168,.75);font-style:italic}
+  .prose > blockquote{margin:0 0 22px;padding:20px 24px;background:#141414;border-left:2px solid #D4AF37;border-radius:0 8px 8px 0;color:#E8D9A8;font-family:var(--font-serif);font-style:italic;font-size:18px;line-height:1.6}
+  .callout{background:#141414;border:1px solid rgba(212,175,55,.3);border-radius:12px;padding:22px 26px;margin:0 0 28px;box-shadow:inset 0 0 24px rgba(212,175,55,.05);font-family:var(--font-sans)}
+  .callout .label{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:#D4AF37;margin:0 0 12px;font-family:var(--font-sans)}
+  .callout p{font-family:var(--font-serif);font-size:17px;line-height:1.6;color:#E8D9A8;margin:0;text-wrap:pretty}
+  .two-col{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:0 0 28px}
+  .two-col .box{background:#141414;border:1px solid rgba(255,255,255,.06);border-radius:8px;padding:20px 24px;font-family:var(--font-sans)}
+  .two-col .box.gold{border-color:rgba(212,175,55,.3);box-shadow:inset 0 0 24px rgba(212,175,55,.05)}
+  .two-col .box p:first-child{font-size:11px;letter-spacing:.12em;text-transform:uppercase;margin:0 0 12px}
+  .two-col .box.gold p:first-child{color:#D4AF37}
+  .two-col .box:not(.gold) p:first-child{color:#A89878}
+  .two-col .box .item{font-size:15px;color:rgba(232,217,168,.9);padding:8px 0;border-bottom:1px solid rgba(255,255,255,.05)}
+  .two-col .box .item:last-child{border-bottom:none}
+  details.provider{background:#141414;border:1px solid rgba(255,255,255,.06);border-radius:8px;overflow:hidden;margin:0 0 10px}
+  details.provider summary{list-style:none;display:flex;justify-content:space-between;align-items:center;gap:16px;padding:18px 22px;cursor:pointer;font-family:var(--font-display);font-size:16px;letter-spacing:.08em;text-transform:uppercase;color:#D4AF37}
+  details.provider summary::-webkit-details-marker{display:none}
+  details.provider summary:hover{background:#161616}
+  details.provider summary .mark{color:#B8922E;font-size:20px;flex:none;transition:transform 200ms}
+  details.provider[open] summary .mark{transform:rotate(45deg)}
+  details.provider .body{padding:0 22px 22px;font-family:var(--font-serif);font-size:16px;line-height:1.65;color:rgba(232,217,168,.85)}
+  details.provider .body p{margin:0 0 12px}
+  details.provider .body a{color:#D4AF37;border-bottom:1px solid rgba(212,175,55,.35)}
+  #purchase-modal{position:fixed;inset:0;z-index:100;display:none;align-items:center;justify-content:center;background:rgba(13,13,13,.75);backdrop-filter:blur(6px);padding:24px;animation:pmFade 200ms ease-out}
+  #purchase-modal.open{display:flex}
+  #purchase-modal .box{max-width:420px;width:100%;background:#141414;border:1px solid rgba(212,175,55,.4);border-radius:12px;box-shadow:0 24px 48px rgba(0,0,0,.7),inset 0 0 24px rgba(212,175,55,.06);padding:32px 32px 26px;text-align:center;position:relative;animation:pmRise 260ms cubic-bezier(.4,0,.2,1)}
+  #purchase-modal .sigil{display:inline-block;width:34px;height:34px;background:#D4AF37;-webkit-mask:url('assets/sigils/quill.svg') center/contain no-repeat;mask:url('assets/sigils/quill.svg') center/contain no-repeat;margin-bottom:14px}
+  #purchase-modal h3{font-family:var(--font-display);font-size:16px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:#D4AF37;margin:0 0 12px}
+  #purchase-modal p{font-family:var(--font-serif);font-size:16.5px;line-height:1.55;color:rgba(232,217,168,.9);margin:0 0 22px;text-wrap:pretty}
+  #purchase-modal button{font-family:var(--font-sans);font-size:13px;font-weight:600;letter-spacing:.06em;color:#0D0D0D;background:#D4AF37;border:none;border-radius:6px;padding:10px 22px;cursor:pointer;transition:background 200ms}
+  #purchase-modal button:hover{background:#E8C547}
+  #purchase-modal .close{position:absolute;top:10px;right:12px;background:none;color:#6B6359;border:none;font-size:22px;padding:4px 10px;cursor:pointer;transition:color 200ms;border-radius:4px}
+  #purchase-modal .close:hover{color:#D4AF37;background:transparent}
+  @keyframes pmFade{from{opacity:0}to{opacity:1}}
+  @keyframes pmRise{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+</style>
+</head>
+<body>
+<div style="min-height:100vh;background:#0D0D0D;color:#E8D9A8;font-family:var(--font-sans)">
+
+<!-- NAV -->
+<nav style="position:sticky;top:0;z-index:50;display:flex;align-items:center;justify-content:space-between;padding:16px 48px;background:rgba(13,13,13,.85);backdrop-filter:blur(12px);border-bottom:1px solid rgba(212,175,55,.12)">
+  <a href="landing.html" style="display:flex;align-items:center;gap:12px;border-bottom:none">
+    <span role="img" aria-label="Mythos" style="display:inline-block;width:28px;height:28px;background:#D4AF37;-webkit-mask:url('assets/logo-m.svg') center/contain no-repeat;mask:url('assets/logo-m.svg') center/contain no-repeat"></span>
+    <span style="font-family:var(--font-display);font-size:18px;letter-spacing:.14em;color:#D4AF37;font-weight:600">MYTHOS</span>
+  </a>
+  <div style="display:flex;align-items:center;gap:32px">
+    <a href="features.html" class="nav-link">Features</a>
+    <a href="pricing.html" class="nav-link">Pricing</a>
+    <a href="#" class="buy-btn js-purchase">Buy Mythos — $59</a>
+  </div>
+</nav>
+
+<!-- HEADER -->
+<header style="padding:90px 48px 60px;text-align:center;border-bottom:1px solid rgba(212,175,55,.12)">
+  <p style="font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:#A89878;margin:0 0 20px">Data Safety &amp; Privacy</p>
+  <h1 style="font-family:var(--font-display);font-size:52px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:#D4AF37;margin:0 0 20px;line-height:1.15">Where your prose goes</h1>
+  <p style="font-family:var(--font-serif);font-size:20px;color:rgba(232,217,168,.8);max-width:640px;margin:0 auto;text-wrap:pretty">The honest, technical answer — what stays on your machine, what leaves it when you invoke an AI feature, and how to lock the whole thing down if you'd rather.</p>
+</header>
+
+<!-- INTRO -->
+<section style="padding:80px 48px;background:#0D0D0D">
+  <div class="prose">
+    <p>Every serious writer has a version of the same question — <em>if I put my manuscript into this thing, does my manuscript stop being mine? Is an AI provider going to steal my work or use it to train their AI?</em></p>
+
+    <p>If that's you, this page is for you. It contains honest answers, in enough detail that you can decide what's right for you.</p>
+
+    <p>The short version: <strong style="color:#D4AF37">nothing about your writing leaves your computer until you use an AI feature.</strong> Reading, editing, saving, exporting, backing up — that's all local. The AI features are the interesting case, and they're what the rest of this page is about.</p>
+
+    <div class="callout">
+      <p class="label">The kill switch</p>
+      <p>You can turn off <strong>all</strong> AI features by going to <strong>Settings → Muse</strong> and toggling off the AI subsystem. When it's off, no AI service will function — Mythos operates as a plain writing app until you turn it back on.</p>
+    </div>
+
+    <h2>Two kinds of AI work, two different answers</h2>
+
+    <p>When you invoke an AI feature — asking the Muse a question, having the Coach draft an outline, running the Editor over a scene — Mythos sends the AI what it needs to do the job. But there are two very different kinds of job, and they share different amounts of your text.</p>
+
+    <p><strong style="color:#D4AF37">Job 1 — Generation.</strong> The AI reads text and writes text back. The Muse's answers, the Coach's proposed outlines, the Editor's flags, the timeline / Codex / Atlas scans, and the AI grammar pass are all this. For each of these, Mythos sends <em>only what the feature needs</em> to reason about: a scene, a chapter, a paragraph, a Codex entry — never your whole project as one giant payload. What comes back is what shows up in the app.</p>
+
+    <p><strong style="color:#D4AF37">Job 2 — Indexing.</strong> For the Muse to answer questions about your project, the app builds a Knowledge Base — a searchable index of what you've written. That index is a set of fingerprints stored as large sets of numbers; one fingerprint per chunk of prose. The fingerprints are what Mythos stores and what your computer and the AI understand. The chunks of text themselves — roughly a paragraph at a time — are what it briefly sends to have the fingerprints created. This happens once when you first open a project, and again quietly as you edit. The fingerprints stay on your computer. The chunks pass through whichever AI provider you have configured to compute them.</p>
+
+    <p>The difference matters because you configure the two jobs independently, per service, in <strong>Settings → Muse</strong>. It's completely reasonable to pair, say, Anthropic's Claude for chat with a local model for indexing — so your prose is never sent over the network just to be turned into search fingerprints.</p>
+
+    <h2 id="knowledge-base">How the knowledge base is built</h2>
+
+    <p>The first time you open a project, and again whenever you edit meaningfully, Mythos rebuilds its knowledge base:</p>
+
+    <ul>
+      <li>Your chapters get split into small chunks — roughly a paragraph at a time — on your computer. Nothing crosses the network here.</li>
+      <li>Each chunk is sent, one at a time, to your embedding provider. The provider returns a fingerprint — a list of numbers. One chunk per request; your work is never uploaded in its entirety or as a single file.</li>
+      <li>The chunk and its fingerprint are written to your project's local knowledge base. From that point on, when the Muse needs to find passages relevant to your question, it searches those fingerprints locally.</li>
+      <li>Nothing about the chunk lives at the provider afterward, except whatever their standard API terms retain — typically a few weeks for abuse monitoring, then deleted. See the provider policies below.</li>
+    </ul>
+
+    <p>Cumulatively, over an initial index of a full novel, every paragraph passes through your embedding provider one at a time, spread over a few minutes or hours depending on how long your manuscript is. That's the honest description — it's not <em>"your whole manuscript is uploaded,"</em> but <em>"every paragraph is briefly seen"</em> by the AI provider so it can be converted, one piece at a time, into mathematical fingerprints your computer can search.</p>
+
+    <p>If that's not acceptable for your project, use a local embedding model (see <a href="#locking-down">Locking things down</a> below) — no prose ever crosses your network or leaves your machine at all when the knowledge base is built.</p>
+
+    <p>One reassurance about the fingerprints themselves: they're just numbers. Given only the fingerprint, no outsider can reconstruct the text it was created from. That's why the fingerprint can safely live in your local knowledge base for years without becoming a risk.</p>
+
+    <h2>What each AI feature actually sends</h2>
+
+    <p>Once the knowledge base is built, day-to-day use sends much less than the initial indexing did. Here's what each feature sends when you invoke it:</p>
+
+    <ul>
+      <li><strong style="color:#E8D9A8">The Muse (chat).</strong> Your question, the passages the app found relevant (up to 10 chunks; the model asks for what it needs), and the recent chat conversation.</li>
+      <li><strong style="color:#E8D9A8">The Muse (inline commands like <code>@chat</code>).</strong> The paragraphs immediately around your cursor, your instructions, and any Codex entries you referenced.</li>
+      <li><strong style="color:#E8D9A8">The Coach.</strong> The chapter or scene you're asking about, plus the Codex entries and beat notes it needs to reason about them.</li>
+      <li><strong style="color:#E8D9A8">The Editor.</strong> The scene it's reviewing, plus the small window of Codex / timeline context that lets it check for continuity.</li>
+      <li><strong style="color:#E8D9A8">Summaries / Craft Passes.</strong> If you trigger a craft pass from the top-level AI menu, the document you're on is split into paragraph-aligned chunks of ~5,000 to 6,000 words, and each chunk is sent in turn until the whole document has been reviewed. If your manuscript is one document per chapter, this may send an entire chapter.</li>
+      <li><strong style="color:#E8D9A8">Timeline / Codex / Atlas scans.</strong> The chapter being scanned. One chapter per request. Never automatic — you press the button.</li>
+      <li><strong style="color:#E8D9A8">Corrections.</strong> The rule you're teaching and the sentence it applies to.</li>
+      <li><strong style="color:#E8D9A8">The AI grammar pass in Proofing.</strong> The paragraph you asked to be checked.</li>
+      <li><strong style="color:#E8D9A8">Image generation.</strong> Your text prompt only. Not your prose.</li>
+      <li><strong style="color:#E8D9A8">The Game Table (RPG mode).</strong> Current game state — dice rolls, moves — not your novel.</li>
+    </ul>
+
+    <p>The pattern: generation features send enough context to do the specific job you asked for, and never anything else.</p>
+
+    <h2>The one background exception</h2>
+
+    <p>There is one AI feature that runs without you explicitly pressing a button: the Editor's <strong>craft-pass reviewer</strong>. When you pause writing for about twenty seconds inside a chapter, the Editor can quietly perform one of its review passes on the document you're actively working on — never anything else, never your whole project. Each recipe has a long cooldown so it doesn't repeat itself, and the whole thing is gated on the AI subsystem being enabled.</p>
+
+    <p>If you'd rather it never fire, disable the Editor's specific services under <strong>Settings → Muse</strong> — or flip the AI kill switch and the whole subsystem stands down.</p>
+
+    <h2>AI providers, and what they say they do</h2>
+
+    <p>You pick your providers in <strong>Settings → Muse</strong>. Each provider has its own published policy for how it treats data sent to its API — an API is a program on a remote computer that other applications talk to, over an encrypted connection, in a language both understand.</p>
+
+    <p>These are honest, current summaries as of <strong>July 2026</strong>. Policies change; the linked pages are always the source of truth if you need to be sure.</p>
+
+    <details class="provider" open>
+      <summary>Anthropic (Claude) <span class="mark">+</span></summary>
+      <div class="body">
+        <p>Anthropic's API terms state that inputs and outputs are not used to train Anthropic's models by default. Data is held for up to 30 days for abuse detection, then discarded. Enterprise Zero Data Retention agreements are available for organisations that need it.</p>
+        <p>This applies to <em>API</em> access — different terms apply to the consumer <em>claude.ai</em> product. Anthropic does not currently offer an embedding endpoint, so if you use Claude for chat you'll need a second provider (or a local model) for indexing.</p>
+        <p>Current terms: <a href="https://www.anthropic.com/legal">anthropic.com/legal</a> and <a href="https://privacy.anthropic.com">privacy.anthropic.com</a>.</p>
+      </div>
+    </details>
+
+    <details class="provider">
+      <summary>OpenAI <span class="mark">+</span></summary>
+      <div class="body">
+        <p>OpenAI's API terms state that traffic is not used to train OpenAI's models by default — a policy in place since March 2023. Data is held for up to 30 days for abuse detection; Zero Retention is available for eligible customers.</p>
+        <p>This is the <em>API</em> — ChatGPT (the consumer product) has different, more permissive terms unless you opt out in its Data Controls, so a ChatGPT subscription is <em>not</em> equivalent to an API key.</p>
+        <p>Current terms: <a href="https://openai.com/policies">openai.com/policies</a>.</p>
+      </div>
+    </details>
+
+    <details class="provider">
+      <summary>Google (Gemini) <span class="mark">+</span></summary>
+      <div class="body">
+        <p>Google's Gemini API distinguishes between the free tier and the paid tier. On the <strong style="color:#C96A5E">free tier</strong>, prompts and responses may be used to improve Google products. On the <strong style="color:#D4AF37">paid tier</strong> they are not. If you're on the free tier, treat everything you send as material Google may retain.</p>
+        <p>Current terms: <a href="https://ai.google.dev/gemini-api/terms">ai.google.dev/gemini-api/terms</a>.</p>
+      </div>
+    </details>
+
+    <details class="provider">
+      <summary>xAI (Grok) <span class="mark">+</span></summary>
+      <div class="body">
+        <p>xAI's stated policy is not to train on API inputs or outputs without explicit permission, and to hold data 30 days for auditing before deletion. xAI also offers a Zero Data Retention option available to all customers; enabling ZDR does not affect Mythos in any way.</p>
+        <p>To enable ZDR: sign in to <a href="https://console.x.ai">console.x.ai</a>, click the settings cog at the bottom-left, open the <em>General</em> page under <em>Team</em>, and toggle <em>Zero Data Retention (ZDR)</em> on.</p>
+        <p>Current terms: <a href="https://x.ai/legal/privacy-policy">x.ai/legal/privacy-policy</a>. ZDR details: <a href="https://docs.x.ai/developers/faq/security#what-is-zero-data-retention-zdr">docs.x.ai · Zero Data Retention</a>.</p>
+      </div>
+    </details>
+
+    <details class="provider">
+      <summary>Local (Ollama, LM Studio, any local endpoint) <span class="mark">+</span></summary>
+      <div class="body">
+        <p>These AI models run entirely on your machine. None of your data — none of your writing — gets sent anywhere, for any Mythos AI service configured to use a local model. There's no policy to explore because there's no service — <em>you</em> are the operator.</p>
+        <p>The trade-off is speed and quality: local models are usually smaller and slower than frontier cloud models, and this shows up most in the Coach's structural work and the timeline / Codex / Atlas / Editor scans. But for <em>indexing</em> — turning chunks into fingerprints — local models are often close to indistinguishable from cloud ones.</p>
+      </div>
+    </details>
+
+    <h2 id="locking-down">Locking things down</h2>
+
+    <p>The controls, from strongest to weakest:</p>
+
+    <h3>Use a local model for everything</h3>
+    <p>Install Ollama or LM Studio, download a chat model (Llama, Qwen, Mistral — for RPG designers we recommend a larger coder model like <em>Qwen 2.5 Coder 32B</em>) and an embedding model (<code>nomic-embed-text</code>, <code>bge-m3</code>, <code>bge-large</code>, <code>mxbai-embed-large</code> — the model library will offer several), add it in <strong>Settings → Muse</strong>, and configure every Mythos AI service to use that local provider. In this configuration, <strong style="color:#D4AF37">no prose ever leaves your computer for any AI job.</strong> This is the most privacy-conservative way to use Mythos, and the app was designed to support it.</p>
+
+    <h3>Use a local model for indexing, cloud for chat</h3>
+    <p>This is the sweet spot for many writers. Cloud models are noticeably sharper for structural work, but indexing sends much more prose over the wire than chat does. Pair Claude, GPT, or Grok for the chat agents with local extraction and embedding models, and you get the best of both worlds — sharp reasoning where you need it, no prose crossing the network for the routine fingerprint work.</p>
+
+    <h3>Pick your provider deliberately, and turn on No Fallback</h3>
+    <p>For each AI service, enable <strong>No Fallback</strong> in <strong>Settings → Muse</strong> to prevent Mythos from silently routing to a different provider if the configured one is unavailable. If you do this, Mythos never routes behind your back — whatever you've selected is what gets used. If you only trust one provider, only add that one's key and disable the rest.</p>
+
+    <h3>Prefer paid keys on any provider whose free tier trains</h3>
+    <p>Gemini is the main one to watch.</p>
+
+    <h3>Only invoke what you need</h3>
+    <p>The AI grammar pass, image generation, and the timeline / Codex / Atlas scans all trigger from a specific action you take. If you don't invoke them, they don't run.</p>
+
+    <h2>What Mythos itself does and does not do</h2>
+
+    <p>Independent of which provider you pick:</p>
+
+    <div class="two-col">
+      <div class="box">
+        <p>Mythos does not</p>
+        <div class="item">Phone home with anything about what you wrote, how much you wrote, or which features you used.</div>
+        <div class="item">Sync your projects to any cloud — files stay on your disk.</div>
+        <div class="item">Route to any AI provider you haven't explicitly configured a key for.</div>
+      </div>
+      <div class="box gold">
+        <p>Mythos does</p>
+        <div class="item">Ping <code>mythos.kabalrpg.com/updater/latest.json</code> to check for a new version. That request carries no data about you or your project.</div>
+        <div class="item">Run one background AI feature — the Editor's idle craft-pass reviewer — on the document you're actively editing, unless you disable it.</div>
+        <div class="item">Fail over between providers <em>only</em> where you haven't set No Fallback on that service.</div>
+      </div>
+    </div>
+
+    <p>Your projects are local files on your disk. If you want them on multiple machines, that's your Dropbox / iCloud / Google Drive choice, not something Mythos manages.</p>
+
+    <h2>If none of this is enough</h2>
+
+    <p>The most privacy-conservative configuration is this: install a local model, don't add any cloud provider key, and optionally disable image generation (which sends only your typed prompt anyway). <strong style="color:#D4AF37">In this configuration, no project data ever leaves your computer.</strong> Some testers use Mythos exclusively this way, and every feature that can work with a local model still works.</p>
+
+    <p>If you enable the iPad companion, your data will travel over your local network from the desktop to the iPad — but the iPad uses the same AI configuration as the desktop, so if you've configured a local-only setup, nothing leaves your local network in that case either.</p>
+
+    <p>If you're still not sure what a specific feature sends, the fastest way to find out is to run it against a tiny throwaway project — one chapter, three Codex entries — while watching your provider's API dashboard. Whatever shows up there is exactly what left your computer.</p>
+
+    <p style="margin-top:56px;text-align:center;font-family:var(--font-sans);font-size:12px;color:#6B6359">Last reviewed July 2026. If you spot something out of date, please <a href="https://github.com/holsat/mythos-releases/issues" style="color:#A89878">open an issue</a>.</p>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer style="background:#0D0D0D;border-top:1px solid rgba(212,175,55,.12);padding:48px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:24px">
+  <div style="display:flex;align-items:center;gap:12px">
+    <span style="display:inline-block;width:22px;height:22px;opacity:.8;background:#D4AF37;-webkit-mask:url('assets/logo-m.svg') center/contain no-repeat;mask:url('assets/logo-m.svg') center/contain no-repeat"></span>
+    <span style="font-size:12px;color:#6B6359">© 2026 Tanuki Vision. Your world. Your voice. Enhanced.</span>
+  </div>
+  <div style="display:flex;gap:28px">
+    <a href="landing.html" class="nav-link" style="font-size:12px">Home</a>
+    <a href="features.html" class="nav-link" style="font-size:12px">Features</a>
+    <a href="pricing.html" class="nav-link" style="font-size:12px">Pricing</a>
+    <a href="privacy.html" class="nav-link active" style="font-size:12px">Privacy</a>
+  </div>
+</footer>
+
+</div>
+
+<div id="purchase-modal" role="dialog" aria-modal="true" aria-labelledby="pm-title">
+  <div class="box">
+    <button type="button" class="close" aria-label="Close">×</button>
+    <span class="sigil" aria-hidden="true"></span>
+    <h3 id="pm-title">Coming Soon</h3>
+    <p>Mythos has not been released yet. Stay tuned — it is coming soon.</p>
+    <button type="button" class="js-close">Close</button>
+  </div>
+</div>
+
+<script>
+(function(){
+  var modal = document.getElementById('purchase-modal');
+  function openM(e){ if(e) e.preventDefault(); modal.classList.add('open'); document.body.style.overflow='hidden'; }
+  function closeM(){ modal.classList.remove('open'); document.body.style.overflow=''; }
+  document.querySelectorAll('.js-purchase').forEach(function(el){ el.addEventListener('click', openM); });
+  modal.addEventListener('click', function(e){ if(e.target === modal) closeM(); });
+  modal.querySelectorAll('.close, .js-close').forEach(function(b){ b.addEventListener('click', closeM); });
+  document.addEventListener('keydown', function(e){ if(e.key === 'Escape' && modal.classList.contains('open')) closeM(); });
+})();
+</script>
+
+</body>
+</html>
