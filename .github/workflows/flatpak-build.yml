@@ -1,0 +1,123 @@
+# Builds a self-hosted Flatpak bundle for Mythos and attaches it to the release.
+#
+# Source lives in the private holsat/mythos repo (checked out via SOURCE_REPO_TOKEN,
+# same as linux-build.yml). Mythos is a single self-contained Tauri binary, so the
+# Flatpak just wraps that binary (per packaging/flatpak/com.kabalrpg.mythos.yml) —
+# no intermediate .deb/AppImage. The binary is built with `--features
+# updater-disabled` so the in-app updater is OFF inside Flatpak (Flatpak / the
+# software center manages updates). `flatpak build-bundle` then produces a
+# single-file .flatpak users install with:
+#     flatpak install --user Mythos_<tag>_x86_64.flatpak
+#     flatpak run com.kabalrpg.mythos
+#
+# SELF-HOSTED FOR NOW: a downloadable bundle attached to the public release. A
+# hosted ostree repo for `flatpak update` delivery, and a Flathub submission, are
+# follow-on work — this needs to be tested first.
+#
+# Requires packaging/flatpak/ in the source ref (holsat/mythos#246). Run with a
+# ref that contains it (that PR's branch, or main once merged).
+name: Flatpak build
+
+on:
+  workflow_dispatch:
+    inputs:
+      ref:
+        description: 'Ref in holsat/mythos to build (tag, branch, or sha) — must contain packaging/flatpak/'
+        required: true
+      tag:
+        description: 'Release tag on holsat/mythos-releases to publish the .flatpak to — e.g. v0.1.23'
+        required: true
+
+permissions:
+  contents: write   # append the .flatpak to the release on this repo
+
+jobs:
+  build-flatpak-x64:
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Checkout source from holsat/mythos
+        uses: actions/checkout@v4
+        with:
+          repository: holsat/mythos
+          ref: ${{ inputs.ref }}
+          token: ${{ secrets.SOURCE_REPO_TOKEN }}
+
+      # Tauri 2 Linux prerequisites (to compile the binary) + the flatpak toolchain.
+      - name: Install system dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            libwebkit2gtk-4.1-dev \
+            libgtk-3-dev \
+            libayatana-appindicator3-dev \
+            librsvg2-dev \
+            libxdo-dev \
+            libssl-dev \
+            build-essential curl wget file \
+            flatpak flatpak-builder
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Set up Rust
+        uses: dtolnay/rust-toolchain@stable
+
+      # LanceDB's lance-encoding build script uses prost-build, which needs protoc.
+      - name: Install protoc
+        uses: arduino/setup-protoc@v3
+        with:
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Cache Rust build
+        uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: src-tauri
+
+      - name: Install frontend dependencies
+        run: npm ci
+
+      # Build the binary with the in-app updater DISABLED. `--no-bundle` skips
+      # deb/appimage packaging — we only need the executable (target/release/mythos).
+      - name: Build (Vite + Tauri binary, updater disabled)
+        run: npm run tauri build -- --features updater-disabled --no-bundle
+        env:
+          TAURI_SIGNING_PRIVATE_KEY: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY }}
+          TAURI_SIGNING_PRIVATE_KEY_PASSWORD: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY_PASSWORD }}
+
+      - name: Stage the binary next to the Flatpak manifest
+        run: |
+          set -euo pipefail
+          cp src-tauri/target/release/mythos packaging/flatpak/mythos
+          ls -la packaging/flatpak/
+
+      # The GNOME 47 runtime ships WebKitGTK 4.1, matching the app's deps.
+      - name: Install the GNOME runtime + SDK
+        run: |
+          flatpak remote-add --if-not-exists --user flathub https://flathub.org/repo/flathub.flatpakrepo
+          flatpak install -y --user flathub org.gnome.Platform//47 org.gnome.Sdk//47
+
+      # `--disable-rofiles-fuse`: the GitHub runner filesystem doesn't support the
+      # rofiles-fuse overlay flatpak-builder uses by default.
+      - name: Build the Flatpak bundle
+        run: |
+          set -euo pipefail
+          cd packaging/flatpak
+          flatpak-builder --user --force-clean --disable-rofiles-fuse \
+            --repo=_repo _build com.kabalrpg.mythos.yml
+          out="Mythos_${{ inputs.tag }}_x86_64.flatpak"
+          flatpak build-bundle _repo "$out" com.kabalrpg.mythos
+          ls -la "$out"
+
+      - name: Publish the .flatpak to the release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ inputs.tag }}
+          name: ${{ inputs.tag }}
+          draft: false
+          prerelease: true
+          fail_on_unmatched_files: true
+          files: |
+            packaging/flatpak/*.flatpak
