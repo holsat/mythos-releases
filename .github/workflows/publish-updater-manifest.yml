@@ -36,6 +36,10 @@ on:
       tag:
         description: 'Release tag to publish manifest for (e.g. v0.1.22)'
         required: true
+      notes:
+        description: 'Release notes for the manifest `notes` field (Markdown; shown on the in-app Updates page). Optional — falls back to the GitHub release body.'
+        required: false
+        default: ''
 
 permissions:
   contents: write   # to commit updater/latest.json on gh-pages
@@ -82,6 +86,10 @@ jobs:
           TAG: ${{ steps.tag.outputs.tag }}
           VERSION: ${{ steps.tag.outputs.version }}
           REPO: ${{ github.repository }}
+          NOTES: ${{ inputs.notes }}
+          # `gh release view` (release-body fallback for `notes`) needs auth in
+          # THIS step's env; without it the call fails and notes silently blank.
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           python3 - <<'PY'
           import json, os, pathlib
@@ -128,17 +136,21 @@ jobs:
           if missing_sigs:
               raise SystemExit(f"installer(s) missing .sig sidecar: {missing_sigs}")
 
-          # Release body is set by the CI workflows to a short auto-line;
-          # good enough for the manifest's `notes` field.
+          # Manifest `notes` (shown on the in-app Updates page): prefer the
+          # explicit `notes` workflow input (real changelog); otherwise fall
+          # back to the GitHub release body. The CI build workflows set only a
+          # short generic body, so pass `notes` when running this workflow to
+          # give users real release notes.
           import subprocess
-          notes = ''
-          try:
-              notes = subprocess.check_output(
-                  ['gh', 'release', 'view', tag, '--repo', repo, '--json', 'body', '--jq', '.body'],
-                  text=True,
-              ).strip()
-          except Exception:
-              pass
+          notes = os.environ.get('NOTES', '').strip()
+          if not notes:
+              try:
+                  notes = subprocess.check_output(
+                      ['gh', 'release', 'view', tag, '--repo', repo, '--json', 'body', '--jq', '.body'],
+                      text=True,
+                  ).strip()
+              except Exception:
+                  pass
 
           manifest = {
               'version': version,
