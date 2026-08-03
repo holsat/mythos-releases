@@ -78,8 +78,14 @@ jobs:
       # APPIMAGE_EXTRACT_AND_RUN lets the AppImage tools run without FUSE
       # on the CI runner. TAURI_SIGNING_PRIVATE_KEY* sign the .AppImage.sig
       # sidecar the updater verifies.
-      - name: Build (Vite + Tauri AppImage)
-        run: npm run tauri build
+      #
+      # `--features updater-link`: ship the AppImage in "link" updater mode —
+      # the in-app updater checks the manifest and offers an architecture-correct
+      # download link instead of trying to self-install (in-place AppImage
+      # replacement is fragile). macOS/Windows keep the default (full self-update)
+      # and pass no feature flag. See updater_mode / [features] in src-tauri.
+      - name: Build (Vite + Tauri AppImage, updater link mode)
+        run: npm run tauri build -- --features updater-link
         env:
           APPIMAGE_EXTRACT_AND_RUN: '1'
           TAURI_SIGNING_PRIVATE_KEY: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY }}
