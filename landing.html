@@ -431,12 +431,13 @@
     <p style="font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:#A89878;margin:0 0 16px">The Terms</p>
     <h2 style="font-family:var(--font-display);font-size:36px;font-weight:500;letter-spacing:.06em;text-transform:uppercase;color:#D4AF37;margin:0 0 20px">Enter the workshop early.</h2>
     <p style="font-family:var(--font-serif);font-size:19px;line-height:1.55;color:rgba(232,217,168,.8);max-width:600px;margin:0 auto 32px;text-wrap:pretty">Sign up for the Mythos beta and we will take you straight to the download page. You will also receive release news, product updates, and occasional workshop dispatches.</p>
-    <form id="subscribe-form" style="display:flex;gap:10px;max-width:560px;margin:0 auto 48px" novalidate>
+    <form id="subscribe-form" action="https://mythoswriter.lemonsqueezy.com/email-subscribe/external" method="post" style="display:flex;gap:10px;max-width:560px;margin:0 auto 12px">
       <label for="subscribe-email" style="position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0">Email address</label>
       <input id="subscribe-email" name="email" type="email" autocomplete="email" placeholder="scribe@example.com" required aria-describedby="subscribe-note" style="flex:1;background:#141414;border:1px solid rgba(212,175,55,.25);border-radius:6px;padding:13px 16px;color:#E8D9A8;font-family:var(--font-sans);font-size:15px;outline:none">
       <button id="subscribe-submit" type="submit" style="background:#D4AF37;color:#0D0D0D;border:none;border-radius:6px;padding:13px 24px;font-family:var(--font-sans);font-size:14px;font-weight:600;cursor:pointer;transition:background 200ms" onmouseover="this.style.background='#E8C547'" onmouseout="this.style.background='#D4AF37'">Join the beta</button>
     </form>
-    <p id="subscribe-note" role="status" aria-live="polite" style="font-family:var(--font-serif);font-style:italic;font-size:16px;color:#D4AF37;border:1px solid rgba(212,175,55,.3);border-radius:8px;padding:16px;display:none;max-width:560px;margin:-32px auto 48px"></p>
+    <p id="subscribe-note" role="status" aria-live="polite" style="font-family:var(--font-serif);font-style:italic;font-size:16px;color:#D4AF37;border:1px solid rgba(212,175,55,.3);border-radius:8px;padding:16px;display:none;max-width:560px;margin:0 auto 12px"></p>
+    <p style="font-size:13px;margin:0 auto 48px"><a href="https://github.com/holsat/mythos-releases/releases" target="_blank" rel="noopener" style="color:#D4AF37;border-bottom:1px solid rgba(212,175,55,.4)">Already signed up or having trouble? Download the beta from GitHub Releases →</a></p>
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;text-align:left">
       <div style="background:#141414;border:1px solid rgba(212,175,55,.5);border-radius:12px;padding:32px;box-shadow:inset 0 0 24px rgba(212,175,55,.06),0 0 24px rgba(212,175,55,.1)">
         <p style="font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:#D4AF37;margin:0 0 10px">Lifetime License</p>
@@ -532,38 +533,18 @@
   if (!reduced) setInterval(tick, 65);
   else typedEl.textContent = full;
 
-  // Lemon Squeezy's public signup endpoint accepts the form without an API key.
-  var LEMON_SQUEEZY_STORE = 'mythoswriter';
-  var RELEASES_URL = 'https://github.com/holsat/mythos-releases/releases';
+  // Native form submission avoids the cross-origin response-header restriction.
   var form = document.getElementById('subscribe-form');
   var note = document.getElementById('subscribe-note');
   var email = document.getElementById('subscribe-email');
   var submit = document.getElementById('subscribe-submit');
-  form.addEventListener('submit', async function(e){
-    e.preventDefault();
+  form.addEventListener('submit', function(){
     email.value = email.value.trim();
     email.style.borderColor = 'rgba(212,175,55,.25)';
-    if (!email.checkValidity()) {
-      email.style.borderColor = '#A8443A';
-      email.focus();
-      return;
-    }
     submit.disabled = true;
     submit.textContent = 'Joining...';
     note.style.display = 'block';
     note.textContent = 'Adding you to the dispatch list...';
-    try {
-      var response = await fetch('https://' + LEMON_SQUEEZY_STORE + '.lemonsqueezy.com/email-subscribe/external', {
-        method: 'POST',
-        body: new FormData(form)
-      });
-      if (!response.ok) throw new Error('Subscription failed');
-      window.location.href = RELEASES_URL;
-    } catch (error) {
-      note.textContent = 'We could not add you to the dispatch list. Please try again.';
-      submit.disabled = false;
-      submit.textContent = 'Join the beta';
-    }
   });
 })();
 </script>
