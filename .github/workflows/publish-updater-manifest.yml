@@ -79,6 +79,7 @@ jobs:
 
       - name: Assemble latest.json
         env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           TAG: ${{ steps.tag.outputs.tag }}
           VERSION: ${{ steps.tag.outputs.version }}
           REPO: ${{ github.repository }}
@@ -128,17 +129,14 @@ jobs:
           if missing_sigs:
               raise SystemExit(f"installer(s) missing .sig sidecar: {missing_sigs}")
 
-          # Release body is set by the CI workflows to a short auto-line;
-          # good enough for the manifest's `notes` field.
+          # Publish the curated release body in the in-app update screen.
           import subprocess
-          notes = ''
-          try:
-              notes = subprocess.check_output(
-                  ['gh', 'release', 'view', tag, '--repo', repo, '--json', 'body', '--jq', '.body'],
-                  text=True,
-              ).strip()
-          except Exception:
-              pass
+          notes = subprocess.check_output(
+              ['gh', 'release', 'view', tag, '--repo', repo, '--json', 'body', '--jq', '.body'],
+              text=True,
+          ).strip()
+          if not notes:
+              raise SystemExit('Release notes are empty; add notes before publishing the updater manifest.')
 
           manifest = {
               'version': version,
